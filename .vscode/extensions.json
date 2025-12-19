@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "biomejs.biome",
+    "cardinal90.multi-cursor-case-preserve",
+    "yoavbls.pretty-ts-errors",
+    "burkeholland.simple-react-snippets",
+    "bradlc.vscode-tailwindcss",
+    "meganrogge.template-string-converter",
+    "vscode-icons-team.vscode-icons"
+  ]
+}

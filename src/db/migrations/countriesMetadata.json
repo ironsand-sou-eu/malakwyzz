@@ -1,0 +1,32 @@
+[
+  {
+    "kind": "violence",
+    "decimals": 9,
+    "source": "UN, World Population Prospects (2024); United Nations Office on Drugs and Crime (2025) - with major processing by Our World in Data. “Homicide rate per 100,000 population” [dataset]. United Nations Office on Drugs and Crime, “United Nations Office on Drugs and Crime - Intentional Homicide Victims”; United Nations, “World Population Prospects”; Various sources, “Population” [original data]."
+  },
+  {
+    "kind": "happyness",
+    "decimals": 4,
+    "source": "Wellbeing Research Centre (2025) - with major processing by Our World in Data. “Self-reported life satisfaction” [dataset]. Wellbeing Research Centre, “World Happiness Report 2025” [original data]."
+  },
+  {
+    "kind": "hdi",
+    "decimals": 3,
+    "source": "UNDP, Human Development Report (2025) - with minor processing by Our World in Data. “Human Development Index - UNDP” [dataset]. UNDP, Human Development Report, “Human Development Report” [original data]."
+  },
+  {
+    "kind": "gdp_per_capita",
+    "decimals": 5,
+    "source": "Our World in Data - processed by Our World in Data. “World regions according to OWID” [dataset]. Our World in Data, “Regions” [original data]."
+  },
+  {
+    "kind": "life_expectancy",
+    "decimals": 4,
+    "source": "Riley (2005); Zijdeman et al. (2015); HMD (2025); UN WPP (2024) - with major processing by Our World in Data. “Life expectancy - Riley; Zijdeman et al.; HMD; UN WPP - Long-run data” [dataset]. Human Mortality Database, “Human Mortality Database”; United Nations, “World Population Prospects”; Zijdeman et al., “Life Expectancy at birth v2”; James C. Riley, “Estimates of Regional and Global Life Expectancy, 1800-2001” [original data]."
+  },
+  {
+    "kind": "land_area",
+    "decimals": 2,
+    "source": "World Bank Group - visited in 08.12.2025, https://data.worldbank.org/indicator/AG.LND.TOTL.K2"
+  }
+]
