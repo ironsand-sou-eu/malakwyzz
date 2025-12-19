@@ -6,6 +6,17 @@ import countriesJsonMetadata from "./countriesMetadata.json";
 
 const db = connectToDatabase();
 
+interface CountryGameData{
+  game_id: "uuid",
+  guesses: {
+    guess:"string",
+    directionToTarget:"up | down",
+    distanceToTarget: "number",
+    timestamp: "timestamp" 
+  }[],
+  target: "string"
+}
+
 const CountryDataTableDefinition = Table.schema({
   columns: {
     year: "smallint",
@@ -36,6 +47,9 @@ const CountryMetadataTableDefinition = Table.schema({
   },
 });
 
+
+
+
 // Infer the TypeScript-equivalent type of the table's schema and primary key.
 // Export the types for later use.
 export type CountryDataTableSchema = InferTableSchema<typeof CountryDataTableDefinition>;
@@ -61,6 +75,16 @@ export async function createCountriesTable() {
   await table.createIndex("violence_index", "violence");
 
   console.log("Indexed columns");
+}
+
+export async function createCountriesCollection(){
+
+ await db.createCollection<CountryGameData>(ASTRA_TABLES.countriesGamesData,{
+  keyspace: ASTRA_KEYSPACES.countries,
+  defaultId: {
+    type:'uuid'},
+})
+ console.log(`Created collection ${ASTRA_TABLES.countriesGamesData}`);
 }
 
 export async function createCountriesMetadataTable() {

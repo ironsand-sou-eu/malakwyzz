@@ -1,6 +1,7 @@
 import Image from "next/image";
 import malakwizzLogo from "@/../public/malakwizz-logo.jpg";
 import {
+  createCountriesCollection,
   createCountriesMetadataTable,
   createCountriesTable,
   seedCountriesData,
@@ -13,10 +14,11 @@ export default function Dashboard() {
     "use server";
 
     try {
-      await createCountriesTable();
-      await seedCountriesData();
-      await createCountriesMetadataTable();
-      await seedCountriesMetadata();
+      // await createCountriesTable();
+      // await seedCountriesData();
+      // await createCountriesMetadataTable();
+      // await seedCountriesMetadata();
+      createCountriesCollection();
     } catch (e) {
       console.log(e);
     }
