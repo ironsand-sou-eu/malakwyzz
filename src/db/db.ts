@@ -7,6 +7,7 @@ export const ASTRA_KEYSPACES = {
 export const ASTRA_TABLES = {
   countriesData: "countries_data",
   countriesMetadata: "countries_metadata",
+  countriesGamesData: "country_games"
 };
 
 /**
