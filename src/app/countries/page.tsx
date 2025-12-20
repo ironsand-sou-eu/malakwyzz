@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { RedirectType, redirect } from "next/navigation";
 import malakwizzLogo from "@/../public/malakwizz-logo.jpg";
 import { ASTRA_KEYSPACES, ASTRA_TABLES, connectToDatabase } from "@/db/db";
 import type { CountryMetadataTablePrimaryKey, CountryMetadataTableSchema } from "@/db/migrations/initial-migration";
@@ -24,11 +25,17 @@ export default async function Countries() {
     }
   }
 
+  async function submitHandler(formData: FormData) {
+    "use server";
+    const kind = formData.get("kind");
+    if (kind) redirect(`/countries/${kind}`, RedirectType.push);
+  }
+
   const gameOptionsResp = await fetchGameOptions();
   const gameOptions = gameOptionsResp.data?.map(d => ({ value: d.kind, label: t(d.kind) }));
 
   return (
-    <main className="m-auto flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+    <main className="m-auto flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-background dark:bg-foreground sm:items-start">
       <Image className="mx-auto" src={malakwizzLogo} alt="Malakwizz logo" width={300} height={300} priority />
       <h1 className="text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
         {t("try-your-luck")}
@@ -36,14 +43,14 @@ export default async function Countries() {
       <div className="flex flex-row items-center gap-6 text-center sm:text-left">
         {gameOptionsResp.hasError || !gameOptions ? (
           <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            An error ocurred, plyz try again
+            {t("an-error-ocurred")}
           </h1>
         ) : (
           <>
             <h2 className="max-w-xs text-2xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
               {t("order-countries-by")}
             </h2>
-            <div className="flex flex-col gap-3">
+            <form className="flex flex-col gap-3" action={submitHandler}>
               <select name="kind" className="p-2 bg-blue-900 rounded-md" defaultValue={gameOptions?.[0].value}>
                 {gameOptions.map(option => (
                   <option key={option.value} value={option.value}>
@@ -52,7 +59,7 @@ export default async function Countries() {
                 ))}
               </select>
               <Button type="submit">{t("i-think-im-ready")}</Button>
-            </div>
+            </form>
           </>
         )}
       </div>
