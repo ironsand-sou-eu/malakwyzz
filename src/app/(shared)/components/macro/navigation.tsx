@@ -22,8 +22,8 @@ function ThemeSwitch() {
 
   if (!mounted) return <AiOutlineLoading3Quarters size="1.5em" />;
   return resolvedTheme === "dark" ? (
-    <FiSun size="1.5em" className="cursor-pointer" onClick={() => setTheme("light")} />
+    <FiMoon size="1.5em" className="cursor-pointer" onClick={() => setTheme("light")} />
   ) : (
-    <FiMoon size="1.5em" className="cursor-pointer" onClick={() => setTheme("dark")} />
+    <FiSun size="1.5em" className="cursor-pointer" onClick={() => setTheme("dark")} />
   );
 }
