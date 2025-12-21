@@ -1,12 +1,12 @@
 import Image from "next/image";
 import malakwizzLogo from "@/../public/malakwizz-logo.jpg";
 import {
-  createCountriesCollection,
+  createCountriesGamesCollection,
   createCountriesMetadataTable,
   createCountriesTable,
   seedCountriesData,
   seedCountriesMetadata,
-} from "@/db/migrations/initial-migration";
+} from "@/db/migrations/countries/countries-migration";
 import Button from "../(shared)/components/micro/button";
 
 export default function Dashboard() {
@@ -18,7 +18,7 @@ export default function Dashboard() {
       // await seedCountriesData();
       // await createCountriesMetadataTable();
       // await seedCountriesMetadata();
-      createCountriesCollection();
+      createCountriesGamesCollection();
     } catch (e) {
       console.log(e);
     }

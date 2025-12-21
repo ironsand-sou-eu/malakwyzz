@@ -1,13 +1,15 @@
 {
   "an-error-ocurred": "An error ocurred, plyz try again",
+  "unavailable-game-type": "Unfortunately, he have not enough info about {{localizedKind}} in the year {{year}}. Try again with other combination.",
   "try-your-luck": "Try your luck (if you have any left)!",
   "order-countries-by": "Order countries by...",
   "i-think-im-ready": "I think I'm ready!",
-  "alphabetical": "Alphabetical",
+  "alphabetical": "alphabetical",
   "gdp_per_capita": "GDP per capita",
-  "happyness": "Happyness",
+  "happyness": "happyness",
   "hdi": "HDI",
-  "land_area": "Land area",
-  "life_expectancy": "Life expectancy",
-  "violence": "Violence"
+  "land_area": "land area",
+  "life_expectancy": "life expectancy",
+  "violence": "violence",
+  "guess-me-if-you-can": "Guess me if you can! (ordered by: {{kindAndYear}})!"
 }

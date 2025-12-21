@@ -1,23 +1,16 @@
 import Image from "next/image";
 import { RedirectType, redirect } from "next/navigation";
 import malakwizzLogo from "@/../public/malakwizz-logo.jpg";
-import { ASTRA_KEYSPACES, ASTRA_TABLES, connectToDatabase } from "@/db/db";
-import type { CountryMetadataTablePrimaryKey, CountryMetadataTableSchema } from "@/db/migrations/initial-migration";
+import { db } from "@/db/db";
 import { getT } from "../(i18n)";
-import Button from "../(shared)/components/micro/button";
+import { Button } from "../(shared)/components/micro/button";
 
 export default async function Countries() {
   const { t } = await getT("countries");
 
   async function fetchGameOptions() {
     try {
-      const db = connectToDatabase();
-      const data = await db
-        .table<CountryMetadataTableSchema, CountryMetadataTablePrimaryKey>(ASTRA_TABLES.countriesMetadata, {
-          keyspace: ASTRA_KEYSPACES.countries,
-        })
-        .find({}, { sort: { kind: 1 }, projection: { kind: true } })
-        .toArray();
+      const data = await db.getGameKinds();
       return { hasError: false, data };
     } catch (e) {
       console.log(e);
