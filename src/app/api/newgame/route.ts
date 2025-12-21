@@ -39,7 +39,6 @@ export async function POST(req: Request) {
       return new MlkApiResponse().status("415-unsupportedMediaType").defaultRequestError({
         type: "UnsuportedTypeException",
         message: e.message,
-        stack: e.stack,
       });
     }
 
@@ -47,7 +46,6 @@ export async function POST(req: Request) {
       return new MlkApiResponse().status("422-unprocessableContent").defaultRequestError({
         type: e.name,
         message: "Problem reading the body.",
-        stack: e.stack,
       });
     }
 
@@ -55,7 +53,6 @@ export async function POST(req: Request) {
       return new MlkApiResponse().status("422-unprocessableContent").defaultRequestError({
         type: e.name,
         message: "Unavailable game kind. Choose another and try again.",
-        stack: e.stack,
       });
     }
 
@@ -63,7 +60,6 @@ export async function POST(req: Request) {
       return new MlkApiResponse().status("422-unprocessableContent").defaultRequestError({
         type: "ValidationException",
         message: e.issues.map(i => `${i.path.join(".")}: ${i.message}`).join("\n"),
-        stack: e.stack,
       });
     }
 
@@ -71,7 +67,6 @@ export async function POST(req: Request) {
       return new MlkApiResponse().status("422-unprocessableContent").defaultRequestError({
         type: e.name,
         message: e.message,
-        stack: e.stack,
       });
     }
     console.warn({

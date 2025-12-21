@@ -3,7 +3,6 @@ import type { UUID } from "@datastax/astra-db-ts";
 export interface ApiErrorResponseBody {
   type: string;
   message: string;
-  stack?: string;
 }
 
 export type CountriesGameUniverse = {

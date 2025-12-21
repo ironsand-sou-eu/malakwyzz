@@ -65,27 +65,26 @@ export async function POST(req: Request) {
     if (e instanceof UnsuportedTypeException) {
       return new MlkApiResponse()
         .status("415-unsupportedMediaType")
-        .defaultRequestError({ type: "UnsuportedTypeException", message: e.message, stack: e.stack });
+        .defaultRequestError({ type: "UnsuportedTypeException", message: e.message });
     }
 
     if (e instanceof SyntaxError && e.message === "Unexpected end of JSON input") {
       return new MlkApiResponse()
         .status("422-unprocessableContent")
-        .defaultRequestError({ type: e.name, message: "Problem reading the body.", stack: e.stack });
+        .defaultRequestError({ type: e.name, message: "Problem reading the body." });
     }
 
     if (e instanceof ZodError) {
       return new MlkApiResponse().status("422-unprocessableContent").defaultRequestError({
         type: "ValidationException",
         message: e.issues.map(i => `${i.path.join(".")}: ${i.message}`).join("\n"),
-        stack: e.stack,
       });
     }
 
     if (e instanceof Error) {
       return new MlkApiResponse()
         .status("422-unprocessableContent")
-        .defaultRequestError({ type: e.name, message: e.message, stack: e.stack });
+        .defaultRequestError({ type: e.name, message: e.message });
     }
   }
 }
