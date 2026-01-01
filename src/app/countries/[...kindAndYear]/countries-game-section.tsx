@@ -2,21 +2,24 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import Toast from "toastify-js";
-import { Button, TextInput } from "@/app/(shared)/components/micro/button";
-import type { CountriesGameData } from "@/app/(shared)/global-interfaces";
+import { Button, TextInput } from "@/shared/components/micro/button";
+import { BASE_API_URL } from "@/shared/global-constants";
+import type { CountriesGameData } from "@/shared/global-interfaces";
+import useNotification from "@/shared/hooks/use-notification";
 
 type CountriesGameSectionProps = {
   gameId: string;
 };
 
 export default function CountriesGameSection({ gameId }: CountriesGameSectionProps) {
+  const notify = useNotification();
+
   const [guesses, setGuesses] = useState<CountriesGameData["guesses"]>([]);
   const [currentGuess, setCurrentGuess] = useState("");
 
   const makeGuessMutation = useMutation({
     mutationFn: async () => {
-      const resp = await fetch("http://192.168.1.134:3000/api/makeguess", {
+      const resp = await fetch(`${BASE_API_URL}/api/countries/makeguess`, {
         body: JSON.stringify({ gameId, guess: currentGuess }),
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -25,30 +28,26 @@ export default function CountriesGameSection({ gameId }: CountriesGameSectionPro
 
       if (resp.ok) {
         setGuesses(prevValues => {
-          const collator = new Intl.Collator("en");
-          return [...prevValues, jsonResp].sort((a, b) => collator.compare(a.guess, b.guess));
+          const allValues = [...prevValues, jsonResp];
+          if (!Number.isNaN(jsonResp.associatedValue)) {
+            return allValues.toSorted((a, b) => b.associatedValue - a.associatedValue);
+          }
+
+          const collator = new Intl.Collator("en", { sensitivity: "base" }); //console.log set to correct locale
+          return allValues.sort(sortByAssociatedValueAlphabetically(collator));
         });
         return;
       }
 
-      Toast({
-        text: jsonResp.message,
-        duration: 3000,
-        gravity: "bottom",
-        position: "right",
-        stopOnFocus: true,
-        style: {
-          position: "absolute",
-          bottom: "20px",
-          right: "20px",
-          padding: "15px",
-          background: "linear-gradient(to right, #00b09b, #96c93d)",
-          maxWidth: "max-content",
-        },
-      }).showToast();
+      notify.warning(jsonResp.message);
       return;
     },
   });
+
+  const sortByAssociatedValueAlphabetically =
+    (collator: Intl.Collator) => (a: { associatedValue: string }, b: { associatedValue: string }) => {
+      return collator.compare(a.associatedValue, b.associatedValue);
+    };
 
   function handleClick() {
     makeGuessMutation.mutate();

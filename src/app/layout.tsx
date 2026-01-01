@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import NavBar from "./(shared)/components/macro/navigation";
 import { Providers } from "./providers";
+import "./globals.css";
+import NavBar from "../shared/components/macro/navigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,11 +19,7 @@ export const metadata: Metadata = {
   description: "Are you up to the task?",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background dark:bg-foreground`}>
