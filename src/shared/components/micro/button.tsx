@@ -6,6 +6,7 @@ import type { ChangeEventHandler, MouseEventHandler, PropsWithChildren } from "r
 interface ButtonProps extends PropsWithChildren {
   type: HTMLButtonElement["type"];
   className?: string;
+  disabled?: boolean;
   onClick?: () => void;
 }
 

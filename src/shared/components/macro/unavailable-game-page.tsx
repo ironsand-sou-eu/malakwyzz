@@ -1,13 +1,13 @@
 import Image from "next/image";
-import malakwizzLogo from "@/../public/malakwizz-logo.jpg";
-import { getT } from "@/app/(i18n)";
+import { getTranslations } from "next-intl/server";
+import malakwizzLogo from "@/../public/malakwizz-logo.png";
 
 interface UnavailableGamePageProps {
   kind: string;
   year: string;
 }
 export default async function UnabailableGamePage({ kind, year }: UnavailableGamePageProps) {
-  const { t } = await getT("countries");
+  const t = await getTranslations("countries.kinds");
   const localizedKind = t(kind);
 
   return (

@@ -54,38 +54,51 @@ const HTTP_STATUS = {
 };
 
 export class MlkApiResponse {
-  private _fineGrainedHeaders: HeadersInit | null = null;
+  private _fineGrainedHeaders: Headers | null = null;
   private _fineGrainedStatus: number | null = null;
-  private _defaultHeaders: HeadersInit = { "content-type": "application/json" };
+  private _defaultHeaders: Headers = new Headers({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  });
 
   public status(status: keyof typeof HTTP_STATUS) {
     this._fineGrainedStatus = HTTP_STATUS[status];
     return this;
   }
 
-  public headers(headers: HeadersInit) {
-    this._fineGrainedHeaders = headers;
+  public headers(headers: Headers) {
+    if (!this._fineGrainedHeaders) {
+      this._fineGrainedHeaders = new Headers(headers);
+    } else {
+      for (const [key, val] of headers) {
+        this._fineGrainedHeaders.set(key, val);
+      }
+    }
     return this;
   }
 
   public defaultRequestError(err: ApiErrorResponseBody) {
     return new Response(JSON.stringify(err), {
       status: this._fineGrainedStatus ?? HTTP_STATUS["400-badRequest"],
-      headers: this._fineGrainedHeaders ?? this._defaultHeaders,
+      headers: mergeHeaders(this._defaultHeaders, this._fineGrainedHeaders),
     });
   }
 
   public defaultServerError(err: ApiErrorResponseBody) {
     return new Response(JSON.stringify(err), {
       status: this._fineGrainedStatus ?? HTTP_STATUS["500-internalServerError"],
-      headers: this._fineGrainedHeaders ?? this._defaultHeaders,
+      headers: mergeHeaders(this._defaultHeaders, this._fineGrainedHeaders),
     });
   }
 
   public json(body: object) {
     return new Response(JSON.stringify(body), {
       status: this._fineGrainedStatus ?? HTTP_STATUS["200-ok"],
-      headers: this._fineGrainedHeaders ?? this._defaultHeaders,
+      headers: mergeHeaders(this._defaultHeaders, this._fineGrainedHeaders),
     });
   }
+}
+
+function mergeHeaders(headers: Headers | null, prevalentHeaders: Headers | null) {
+  return new Headers([...(headers?.entries() ?? []), ...(prevalentHeaders?.entries() ?? [])]);
 }
