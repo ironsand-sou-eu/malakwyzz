@@ -1,24 +1,46 @@
 import Image from "next/image";
-import malakwizzLogo from "@/../public/malakwizz-logo.jpg";
+import malakwizzLogo from "@/../public/malakwizz-logo.png";
 import {
+  createCountriesAlphabeticalTable,
   createCountriesGamesCollection,
+  createCountriesGdpPerCapitaTable,
+  createCountriesHappinessTable,
+  createCountriesHdiTable,
+  createCountriesLandAreaTable,
+  createCountriesLifeExpectancyTable,
   createCountriesMetadataTable,
-  createCountriesTable,
-  seedCountriesData,
+  seedCountriesAlphabeticalData,
+  seedCountriesGdpPerCapitaData,
+  seedCountriesHappinessData,
+  seedCountriesHdiData,
+  seedCountriesLandAreaData,
+  seedCountriesLifeExpectancyData,
   seedCountriesMetadata,
 } from "@/db/migrations/countries/countries-migration";
-import Button from "../(shared)/components/micro/button";
+import { Button } from "../../shared/components/micro/button";
 
 export default function Dashboard() {
   async function migrate() {
     "use server";
 
     try {
-      // await createCountriesTable();
-      // await seedCountriesData();
-      // await createCountriesMetadataTable();
-      // await seedCountriesMetadata();
-      createCountriesGamesCollection();
+      await createCountriesAlphabeticalTable();
+      await createCountriesGdpPerCapitaTable();
+      await createCountriesHappinessTable();
+      await createCountriesHdiTable();
+      await createCountriesLandAreaTable();
+      await createCountriesLifeExpectancyTable();
+      await createCountriesMetadataTable();
+
+      await seedCountriesAlphabeticalData();
+      await seedCountriesGdpPerCapitaData();
+      await seedCountriesHappinessData();
+      await seedCountriesHdiData();
+      await seedCountriesLandAreaData();
+      await seedCountriesLifeExpectancyData();
+      await seedCountriesMetadata();
+
+      await createCountriesGamesCollection();
     } catch (e) {
       console.log(e);
     }

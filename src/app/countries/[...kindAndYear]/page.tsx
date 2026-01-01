@@ -1,10 +1,10 @@
 import type { UUID } from "@datastax/astra-db-ts";
 import Image from "next/image";
-import malakwizzLogo from "@/../public/malakwizz-logo.jpg";
-import { getT } from "@/app/(i18n)";
-import UnabailableGamePage from "@/app/(shared)/components/macro/unavailable-game-page";
-import { isAllowedGameKind } from "@/app/(shared)/functions/typeguards";
-import { createCountriesGameInDB } from "@/app/api/newgame/route";
+import { getTranslations } from "next-intl/server";
+import malakwizzLogo from "@/../public/malakwizz-logo.png";
+import { createCountriesGameInDB } from "@/app/api/countries/newgame/route";
+import UnabailableGamePage from "@/shared/components/macro/unavailable-game-page";
+import { isAllowedGameKind } from "@/shared/functions/typeguards";
 import CountriesGameSection from "./countries-game-section";
 
 const USER_ID = "a4ae381b-4759-7fb2-8d69-afc96ccb4593" as unknown as UUID; //console.log: make dynamic
@@ -30,7 +30,7 @@ export default async function CountriesGame({ params }: PageProps<"/countries/[.
 
   if (!gameId) return <UnabailableGamePage kind={kind} year={year} />;
 
-  const { t } = await getT("countries");
+  const t = await getTranslations("countries.kinds");
 
   const localizedKind = t(kind);
   const kindAndYear = kind === "alphabetical" ? localizedKind : `${localizedKind} - ${year}`;
