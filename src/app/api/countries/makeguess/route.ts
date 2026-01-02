@@ -1,20 +1,21 @@
 import type { UUID } from "@datastax/astra-db-ts";
 import { NextResponse } from "next/server";
-import z, { ZodError } from "zod";
-import { MlkApiResponse } from "@/app/(shared)/classes/mlk-api-response";
+import z from "zod";
+import { db } from "@/db/db";
+import { MlkApiResponse } from "@/shared/classes/mlk-api-response";
 import {
   GameNotFoundException,
   UnsuportedTypeException,
   ValueNotFoundInGameException,
-} from "@/app/(shared)/exceptions/exceptions";
-import { db } from "@/db/db";
+} from "@/shared/exceptions/exceptions";
+import { commonErrorHandlingPlaceAtBottom } from "@/shared/functions/api-error-handling";
 
 const PostBodySchema = z.object({
   gameId: z.string().nonempty(),
   guess: z.string().nonempty(),
 });
 
-export type MakeGuessPostBody = AddGuessToGameInDBParams;
+export type MakeGuessPostBody = z.infer<typeof PostBodySchema>;
 
 export async function OPTIONS() {
   return new Response(null, {
@@ -36,56 +37,29 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { gameId, guess } = PostBodySchema.parse(body);
 
+    console.log({ gameId, guess });
+
     const guessResp = await addGuessToGameInDB({
       gameId: gameId as unknown as AddGuessToGameInDBParams["gameId"],
       guess,
     });
 
     if (!guessResp)
-      return NextResponse.json(
-        { error: "There was a problem, it won't count towards your guesses." },
-        { status: 200, headers: { "Access-Control-Allow-Origin": "*" } }
-      );
+      return new MlkApiResponse()
+        .status("200-ok")
+        .json({ error: "There was a problem, it won't count towards your guesses." });
 
     return NextResponse.json(guessResp, { status: 201, headers: { "Access-Control-Allow-Origin": "*" } });
   } catch (e) {
     if (e instanceof ValueNotFoundInGameException) {
-      return new MlkApiResponse()
-        .headers({ "Access-Control-Allow-Origin": "*" })
-        .defaultRequestError({ type: e.name, message: e.message });
+      return new MlkApiResponse().defaultRequestError({ type: e.name, message: e.message });
     }
 
     if (e instanceof GameNotFoundException) {
-      return new MlkApiResponse()
-        .status("500-internalServerError")
-        .headers({ "Access-Control-Allow-Origin": "*" })
-        .json({ type: e.name, message: e.message });
+      return new MlkApiResponse().status("500-internalServerError").json({ type: e.name, message: e.message });
     }
 
-    if (e instanceof UnsuportedTypeException) {
-      return new MlkApiResponse()
-        .status("415-unsupportedMediaType")
-        .defaultRequestError({ type: "UnsuportedTypeException", message: e.message });
-    }
-
-    if (e instanceof SyntaxError && e.message === "Unexpected end of JSON input") {
-      return new MlkApiResponse()
-        .status("422-unprocessableContent")
-        .defaultRequestError({ type: e.name, message: "Problem reading the body." });
-    }
-
-    if (e instanceof ZodError) {
-      return new MlkApiResponse().status("422-unprocessableContent").defaultRequestError({
-        type: "ValidationException",
-        message: e.issues.map(i => `${i.path.join(".")}: ${i.message}`).join("\n"),
-      });
-    }
-
-    if (e instanceof Error) {
-      return new MlkApiResponse()
-        .status("422-unprocessableContent")
-        .defaultRequestError({ type: e.name, message: e.message });
-    }
+    return commonErrorHandlingPlaceAtBottom(e);
   }
 }
 
@@ -97,9 +71,13 @@ export async function addGuessToGameInDB({ gameId, guess }: AddGuessToGameInDBPa
   const gameInfo = await db.getGameInfo({ gameId });
   if (!gameInfo) throw new GameNotFoundException();
 
-  const foundIndex = gameInfo.context.gameUniverse.findIndex(
-    item => item.country.toLowerCase().trim() === guess.toLowerCase().trim()
-  );
+  const foundIndex = gameInfo.context.gameUniverse.findIndex(item => {
+    const lcTrimmedGuess = guess.toLowerCase().trim();
+    return (
+      item.countryCode.toLowerCase().trim() === lcTrimmedGuess ||
+      item.countryNames.some(countryName => countryName.toLowerCase().trim() === lcTrimmedGuess)
+    );
+  });
 
   if (foundIndex === -1) throw new ValueNotFoundInGameException();
 
@@ -107,7 +85,8 @@ export async function addGuessToGameInDB({ gameId, guess }: AddGuessToGameInDBPa
     directionToTarget: getDirectionToTarget(foundIndex, gameInfo.target.index),
     distanceToTarget: Math.abs(foundIndex - gameInfo.target.index),
     guess,
-    associatedValue: gameInfo.context.gameUniverse[foundIndex].value,
+    associatedValue:
+      gameInfo.context.gameUniverse[foundIndex].value ?? gameInfo.context.gameUniverse[foundIndex].countryCode,
     timestamp: new Date().toISOString(),
   };
 
