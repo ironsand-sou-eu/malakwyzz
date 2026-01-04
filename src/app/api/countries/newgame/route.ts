@@ -100,11 +100,11 @@ function insertValuesIfAlphabetical(kind: CountriesGameKind, universe: Countries
 }
 
 function sortGameUniverse(universe: CountriesGameUniverse) {
-  if (universe[0].value && !Number.isNaN(universe[0].value))
+  if (!Number.isNaN(Number(universe[0].value))) {
     return universe.toSorted((entryA, entryB) => (entryB.value as number) - (entryA.value as number));
-
+  }
   const collator = new Intl.Collator("en", { sensitivity: "base" }); //console.log: set to correct locale
-  return universe.toSorted((entryA, entryB) => collator.compare(`${entryA.value ?? ""}`, `${entryB.value ?? ""}`));
+  return universe.toSorted((entryA, entryB) => collator.compare(`${entryA.value}`, `${entryB.value}`));
 }
 
 function adaptGameUniverseDecimals(
