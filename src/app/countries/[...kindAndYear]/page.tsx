@@ -4,8 +4,11 @@ import { getTranslations } from "next-intl/server";
 import malakwizzLogo from "@/../public/malakwizz-logo.png";
 import { createCountriesGameInDB } from "@/app/api/countries/newgame/route";
 import UnabailableGamePage from "@/shared/components/macro/unavailable-game-page";
+import { Subtitle, Title } from "@/shared/components/micro/titles";
 import { isAllowedGameKind } from "@/shared/functions/typeguards";
-import CountriesGameSection from "./countries-game-section";
+import CountriesGameProvider from "./countries-game-provider";
+import CountriesGuessesList from "./countries-guesses-list";
+import CountriesInput from "./countries-input";
 
 const USER_ID = "a4ae381b-4759-7fb2-8d69-afc96ccb4593" as unknown as UUID; //console.log: make dynamic
 
@@ -30,18 +33,26 @@ export default async function CountriesGame({ params }: PageProps<"/countries/[.
 
   if (!gameId) return <UnabailableGamePage kind={kind} year={year} />;
 
-  const t = await getTranslations("countries.kinds");
+  const tKind = await getTranslations("countries.kinds");
+  const tGeneral = await getTranslations("");
 
-  const localizedKind = t(kind);
+  const localizedKind = tKind(kind);
   const kindAndYear = kind === "alphabetical" ? localizedKind : `${localizedKind} - ${year}`;
 
   return (
-    <main className="m-auto flex min-h-screen w-full max-w-3xl flex-col items-center py-32 px-16 bg-background dark:bg-foreground sm:items-start">
-      <Image className="mx-auto" src={malakwizzLogo} alt="Malakwizz logo" width={150} height={150} priority />
-      <h1 className="text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-        {t("guess-me-if-you-can", { kindAndYear })}
-      </h1>
-      <CountriesGameSection gameId={gameId.toString()} />
+    <main
+      className="m-auto flex w-full max-w-3xl py-10 px-6 flex-col items-center justify-between bg-background dark:bg-foreground sm:items-start"
+      style={{ minHeight: "calc(100dvh - 40px)" }}
+    >
+      <div>
+        <Image className="mx-auto" src={malakwizzLogo} alt="Malakwizz logo" width={150} height={150} priority />
+        <Title>{tGeneral("guess-me-if-you-can", { kindAndYear })}</Title>
+        <Subtitle>{tGeneral("ordered-by", { kindAndYear })}</Subtitle>
+      </div>
+      <CountriesGameProvider>
+        <CountriesGuessesList />
+        <CountriesInput gameId={gameId.toString()} />
+      </CountriesGameProvider>
     </main>
   );
 }

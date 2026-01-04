@@ -1,11 +1,13 @@
 {
   "an-error-ocurred": "An error ocurred, plyz try again",
-  "unavailable-game-type": "Unfortunately, he have not enough info about {{localizedKind}} in the year {{year}}. Try again with other combination.",
+  "unavailable-game-type-by-year": "Unfortunately, he have not enough info about {localizedKind} in the year {year}. Try again with other combination.",
+  "unavailable-game-type": "Unfortunately, he have not enough info about {localizedKind}. Try again with other combination.",
   "geo-geeks-gather": "Geo geeks around the world, behold!",
   "try-your-luck": "Some people rely on knowledge. Others, on sheer luck. What is your case?",
   "order-by": "Order by...",
   "i-think-im-ready": "I think I'm ready!",
-  "guess-me-if-you-can": "Guess me if you can! (ordered by: {{kindAndYear}})!",
+  "guess-me-if-you-can": "Guess me if you can!",
+  "ordered-by": "Ordered by: {kindAndYear}",
   "countries": {
     "kinds": {
       "alphabetical": "alphabetical",
