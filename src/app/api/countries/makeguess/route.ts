@@ -37,8 +37,6 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { gameId, guess } = PostBodySchema.parse(body);
 
-    console.log({ gameId, guess });
-
     const guessResp = await addGuessToGameInDB({
       gameId: gameId as unknown as AddGuessToGameInDBParams["gameId"],
       guess,

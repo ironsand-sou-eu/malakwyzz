@@ -1,6 +1,6 @@
 import type { CountriesGameKind } from "./global-interfaces";
 
-export const BASE_API_URL = "http://192.168.1.132:3000";
+export const BASE_API_URL = "http://localhost:3000";
 
 export const MIN_COUNTRIES_PER_GAME = 100;
 
