@@ -1,0 +1,25 @@
+.concavity-left-border::before {
+  content: "";
+  position: absolute;
+  border: var(--color-amber-900) 4px solid;
+  border-radius: 50%;
+  height: 250%;
+  aspect-ratio: 1;
+  top: -200%;
+  left: -100px;
+  transform: translateY(50%);
+  z-index: 5;
+}
+
+.concavity-left-border {
+  position: relative;
+  overflow: hidden;
+}
+
+.concavity-left {
+  mask-repeat: no-repeat;
+  mask-mode: alpha, alpha;
+  mask-position: -124% center, RIGHT center;
+  mask-size: 61% 300%, 90% 100%;
+  mask-image: radial-gradient(transparent 50%, #bb8e8e 50%), linear-gradient(black, black);
+}

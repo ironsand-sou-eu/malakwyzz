@@ -5,6 +5,7 @@
 :root {
   --background: #fdf6dce8;
   --foreground: #010035;
+  box-sizing: border-box;
 }
 
 @theme inline {
