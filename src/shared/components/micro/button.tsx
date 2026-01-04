@@ -1,7 +1,6 @@
 // biome-ignore-all lint: This is the adapter file
 import MuiButton from "@mui/material/Button";
-import MuiTextField from "@mui/material/TextField";
-import type { ChangeEventHandler, MouseEventHandler, PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 
 interface ButtonProps extends PropsWithChildren {
   type: HTMLButtonElement["type"];
@@ -16,15 +15,4 @@ export function Button({ children, ...rest }: ButtonProps) {
       {children}
     </MuiButton>
   );
-}
-
-interface TextInputProps {
-  className?: string;
-  value?: string;
-  onClick?: MouseEventHandler<HTMLInputElement>;
-  onChange?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
-}
-
-export function TextInput({ value = "", ...rest }: TextInputProps) {
-  return <MuiTextField variant="filled" value={value} {...rest} />;
 }
