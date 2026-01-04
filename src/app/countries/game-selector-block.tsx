@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Button } from "@/shared/components/micro/button";
+import { Title } from "@/shared/components/micro/titles";
 import { isAllowedGameKindByYear } from "@/shared/functions/typeguards";
 import { BASE_API_URL } from "../../shared/global-constants";
 import type { CountriesGameKind } from "../../shared/global-interfaces";
@@ -62,59 +63,54 @@ export default function GameSelectorBlock() {
     if (error) notify.error(error.message);
   }, [notify.error, error]);
 
-  return (
-    <div className="flex flex-col items-center gap-6 text-center sm:text-left">
-      {kindError ? (
-        <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-dark-blue dark:text-light-green">
-          {t("an-error-ocurred")}
-        </h1>
-      ) : (
-        <>
-          <h2 className="max-w-xs text-2xl font-semibold leading-10 tracking-tight text-dark-blue dark:text-light-green">
-            {t("order-by")}
-          </h2>
+  return kindError ? (
+    <Title>{t("an-error-ocurred")}</Title>
+  ) : (
+    <section className="flex flex-col gap-6">
+      <div className="flex flex-col items-center gap-4 text-center sm:text-left">
+        <h2 className="max-w-xs text-2xl font-semibold leading-10 tracking-tight text-dark-blue dark:text-light-green">
+          {t("order-by")}
+        </h2>
+        <select
+          name="kind"
+          className="p-2 rounded-md capitalize text-dark-blue dark:text-light-green min-w-36"
+          value={selectedKind?.kind}
+          onChange={ev => setSelectedKind(kinds?.find(k => k.kind === ev.currentTarget.value))}
+        >
+          {kinds?.map(kind => (
+            <option className="capitalize" key={kind.kind} value={kind.kind}>
+              {kind.label}
+            </option>
+          ))}
+        </select>
+        {years?.length && (
           <select
-            name="kind"
-            className="p-2 rounded-md capitalize text-dark-blue dark:text-light-green"
-            value={selectedKind?.kind}
-            onChange={ev => setSelectedKind(kinds?.find(k => k.kind === ev.currentTarget.value))}
+            name="year"
+            className="p-2 rounded-md capitalize text-dark-blue dark:text-light-green min-w-20"
+            value={selectedYear}
+            onChange={ev => setSelectedYear(parseInt(ev.currentTarget.value, 10))}
           >
-            {kinds?.map(kind => (
-              <option className="capitalize" key={kind.kind} value={kind.kind}>
-                {kind.label}
+            {years.map(year => (
+              <option key={year} value={year}>
+                {year}
               </option>
             ))}
           </select>
-          {years?.length && (
-            <select
-              name="year"
-              className="p-2 bg-blue-900 rounded-md"
-              value={selectedYear}
-              onChange={ev => setSelectedYear(parseInt(ev.currentTarget.value, 10))}
-            >
-              {years.map(year => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          )}
-
-          <Button
-            type="button"
-            disabled={!selectedKind || (selectedKind.applyYears && !selectedYear)}
-            onClick={() => {
-              if (!selectedKind) return;
-              if (!selectedKind.applyYears) window.location.pathname = `/countries/${selectedKind.kind}`;
-              if (selectedKind.applyYears && selectedYear) {
-                window.location.pathname = `/countries/${selectedKind.kind}/${selectedYear}`;
-              }
-            }}
-          >
-            {t("i-think-im-ready")}
-          </Button>
-        </>
-      )}
-    </div>
+        )}
+      </div>
+      <Button
+        type="button"
+        disabled={!selectedKind || (selectedKind.applyYears && !selectedYear)}
+        onClick={() => {
+          if (!selectedKind) return;
+          if (!selectedKind.applyYears) window.location.pathname = `/countries/${selectedKind.kind}`;
+          if (selectedKind.applyYears && selectedYear) {
+            window.location.pathname = `/countries/${selectedKind.kind}/${selectedYear}`;
+          }
+        }}
+      >
+        {t("i-think-im-ready")}
+      </Button>
+    </section>
   );
 }
