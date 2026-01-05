@@ -178,7 +178,7 @@ export class MlkDb {
       .table<CountriesLandAreaTableSchema, CountriesLandAreaTablePrimaryKey>(ASTRA_TABLES.countriesByLandArea, {
         keyspace: ASTRA_KEYSPACES.countries,
       })
-      .find({}, { sort: { land_area: 1 } })
+      .find({})// { sort: { land_area: 1 } })
       .map(i => ({ countryCode: i.country_code, possessionOf: i.possession_of, value: i.land_area }))
       .toArray();
   }
@@ -189,7 +189,7 @@ export class MlkDb {
         ASTRA_TABLES.countriesByLifeExpectancy,
         { keyspace: ASTRA_KEYSPACES.countries }
       )
-      .find({ year }, { sort: { life_expectancy: 1 } })
+      .find({ }) //{ sort: { life_expectancy: 1 } })
       .map(i => ({
         countryCode: i.country_code,
         possessionOf: i.possession_of,
