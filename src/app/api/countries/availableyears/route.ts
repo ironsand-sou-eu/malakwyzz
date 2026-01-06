@@ -14,13 +14,13 @@ export type AvailableYearsPostBody = z.infer<typeof PostBodySchema>;
 
 export async function OPTIONS() {
   return new Response(null, {
-    status: 200,
     headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization",
       "Access-Control-Allow-Credentials": "true",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Origin": "*",
     },
+    status: 200,
   });
 }
 
@@ -33,8 +33,8 @@ export async function GET(req: Request) {
   } catch (e) {
     if (e instanceof UnavailableGameKindException) {
       return new MlkApiResponse().status("422-unprocessableContent").defaultRequestError({
-        type: e.name,
         message: "Unavailable game kind. Choose another and try again.",
+        type: e.name,
       });
     }
     return commonErrorHandlingPlaceAtBottom(e);
