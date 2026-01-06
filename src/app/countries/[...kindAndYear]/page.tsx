@@ -40,10 +40,7 @@ export default async function CountriesGame({ params }: PageProps<"/countries/[.
   const kindAndYear = kind === "alphabetical" ? localizedKind : `${localizedKind} - ${year}`;
 
   return (
-    <main
-      className="m-auto flex w-full max-w-3xl py-10 px-6 flex-col items-center justify-between bg-background dark:bg-foreground sm:items-start"
-      style={{ minHeight: "calc(100dvh - 40px)" }}
-    >
+    <>
       <div>
         <Image className="mx-auto" src={malakwizzLogo} alt="Malakwizz logo" width={150} height={150} priority />
         <Title>{tGeneral("guess-me-if-you-can", { kindAndYear })}</Title>
@@ -53,6 +50,6 @@ export default async function CountriesGame({ params }: PageProps<"/countries/[.
         <CountriesGuessesList />
         <CountriesInput gameId={gameId.toString()} />
       </CountriesGameProvider>
-    </main>
+    </>
   );
 }
