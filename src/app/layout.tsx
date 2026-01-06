@@ -25,11 +25,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={classNames(
-          geistSans.variable,
-          geistMono.variable,
-          "antialiased bg-background dark:bg-foreground max-w",
-        )}
+        className={classNames(geistSans.variable, geistMono.variable, "antialiased bg-background dark:bg-foreground")}
         style={{ backgroundPositionX: x }}
       >
         <Providers>
