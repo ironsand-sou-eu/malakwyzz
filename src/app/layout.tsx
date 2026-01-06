@@ -5,19 +5,13 @@ import "./globals.css";
 import classNames from "classnames";
 import NavBar from "../shared/components/macro/navigation";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
 
 export const metadata: Metadata = {
-  title: "MalaKwyzz",
   description: "Are you up to the task?",
+  title: "MalaKwyzz",
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

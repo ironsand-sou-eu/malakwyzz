@@ -17,15 +17,23 @@ const PostBodySchema = z.object({
 
 export type MakeGuessPostBody = z.infer<typeof PostBodySchema>;
 
+export type MakeGuessPostResponse = {
+  guess: string;
+  associatedValue: string | number;
+  directionToTarget: "up" | "down" | "win";
+  distanceToTarget: number;
+  timestamp: string;
+};
+
 export async function OPTIONS() {
   return new Response(null, {
-    status: 200,
     headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization",
       "Access-Control-Allow-Credentials": "true",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Origin": "*",
     },
+    status: 200,
   });
 }
 
@@ -43,18 +51,19 @@ export async function POST(req: Request) {
     });
 
     if (!guessResp)
-      return new MlkApiResponse()
-        .status("200-ok")
-        .json({ error: "There was a problem, it won't count towards your guesses." });
+      return new MlkApiResponse().defaultServerError({
+        message: "There was a problem, it won't count towards your guesses.",
+        type: "Internal server error",
+      });
 
-    return NextResponse.json(guessResp, { status: 201, headers: { "Access-Control-Allow-Origin": "*" } });
+    return NextResponse.json(guessResp, { headers: { "Access-Control-Allow-Origin": "*" }, status: 201 });
   } catch (e) {
     if (e instanceof ValueNotFoundInGameException) {
-      return new MlkApiResponse().defaultRequestError({ type: e.name, message: e.message });
+      return new MlkApiResponse().defaultRequestError({ message: e.message, type: e.name });
     }
 
     if (e instanceof GameNotFoundException) {
-      return new MlkApiResponse().status("500-internalServerError").json({ type: e.name, message: e.message });
+      return new MlkApiResponse().status("500-internalServerError").json({ message: e.message, type: e.name });
     }
 
     return commonErrorHandlingPlaceAtBottom(e);
@@ -65,7 +74,10 @@ interface AddGuessToGameInDBParams {
   gameId: UUID;
   guess: string;
 }
-export async function addGuessToGameInDB({ gameId, guess }: AddGuessToGameInDBParams) {
+export async function addGuessToGameInDB({
+  gameId,
+  guess,
+}: AddGuessToGameInDBParams): Promise<MakeGuessPostResponse | undefined> {
   const gameInfo = await db.getGameInfo({ gameId });
   if (!gameInfo) throw new GameNotFoundException();
 
@@ -80,11 +92,11 @@ export async function addGuessToGameInDB({ gameId, guess }: AddGuessToGameInDBPa
   if (foundIndex === -1) throw new ValueNotFoundInGameException();
 
   const newGuess: Parameters<typeof db.addGuessToGame>[0]["newGuess"] = {
+    associatedValue:
+      gameInfo.context.gameUniverse[foundIndex].value ?? gameInfo.context.gameUniverse[foundIndex].countryCode,
     directionToTarget: getDirectionToTarget(foundIndex, gameInfo.target.index),
     distanceToTarget: Math.abs(foundIndex - gameInfo.target.index),
     guess,
-    associatedValue:
-      gameInfo.context.gameUniverse[foundIndex].value ?? gameInfo.context.gameUniverse[foundIndex].countryCode,
     timestamp: new Date().toISOString(),
   };
 

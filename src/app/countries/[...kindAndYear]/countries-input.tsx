@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { type FormEvent, useState } from "react";
 import { Button } from "@/shared/components/micro/button";
 import { TextInput } from "@/shared/components/micro/text-input";
@@ -14,7 +15,8 @@ type CountriesInputProps = {
 
 export default function CountriesInput({ gameId }: CountriesInputProps) {
   const notify = useNotification();
-  const { setGuesses } = useCountriesGuesses();
+  const { guesses, addGuess } = useCountriesGuesses();
+  const t = useTranslations("");
 
   const [currentGuess, setCurrentGuess] = useState("");
 
@@ -22,41 +24,35 @@ export default function CountriesInput({ gameId }: CountriesInputProps) {
     mutationFn: async () => {
       const resp = await fetch(`${BASE_API_URL}/api/countries/makeguess`, {
         body: JSON.stringify({ gameId, guess: currentGuess }),
-        method: "POST",
         headers: { "Content-Type": "application/json" },
+        method: "POST",
       });
       const jsonResp = await resp.json();
 
-      if (resp.ok) {
-        setGuesses(prevValues => {
-          const allValues = [...prevValues, jsonResp];
-          if (!Number.isNaN(Number(jsonResp.associatedValue))) {
-            return allValues.toSorted((a, b) => b.associatedValue - a.associatedValue);
-          }
-
-          const collator = new Intl.Collator("en", { sensitivity: "base" }); //console.log set to correct locale
-          return allValues.sort(sortByAssociatedValueAlphabetically(collator));
-        });
-        setCurrentGuess("");
+      if (!resp.ok) {
+        notify.warning(jsonResp.message);
         return;
       }
 
-      notify.warning(jsonResp.message);
-      return;
+      addGuess(jsonResp);
+      setCurrentGuess("");
     },
   });
-
-  const sortByAssociatedValueAlphabetically =
-    (collator: Intl.Collator) => (a: { associatedValue: string }, b: { associatedValue: string }) => {
-      return collator.compare(a.associatedValue, b.associatedValue);
-    };
 
   function handleSubmit(ev?: FormEvent) {
     ev?.preventDefault();
     // console.log sanitize "currentGuess"
-    // console.log Verify if "currentGuess" isn't already in guess list
-    // console.log Verify if "currentGuess" isn't empty
+    if (!isInputValid()) return;
     makeGuessMutation.mutate();
+  }
+
+  function isInputValid() {
+    if (!currentGuess.trim()) return false;
+    if (guesses.some(g => g.guess.toLowerCase().trim() === currentGuess.toLowerCase().trim())) {
+      notify.warning(t("guess-already-made"));
+      return false;
+    }
+    return true;
   }
 
   return (
