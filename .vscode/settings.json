@@ -1,4 +1,8 @@
 {
+  "editor.codeActionsOnSave": {
+    "source.actions.useSortedKeys.biome": "explicit",
+    "source.fixAll.biome": "explicit"
+  },
   "javascript.preferences.importModuleSpecifier": "shortest",
   "typescript.preferences.importModuleSpecifier": "shortest"
 }
