@@ -1,10 +1,15 @@
 @import "tailwindcss";
+@import "toastify-js/src/toastify.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --background: #fdf6dce8;
   --foreground: #010035;
+  --bg-error: linear-gradient(to right, rgb(165 6 6), rgb(0 121 157));
+  --bg-success: linear-gradient(to right, #00b09b, #96c93d);
+  --bg-warning: linear-gradient(to right, rgb(153 120 1), rgb(150, 201, 61));
+
   box-sizing: border-box;
 }
 

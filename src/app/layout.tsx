@@ -5,19 +5,13 @@ import "./globals.css";
 import classNames from "classnames";
 import NavBar from "../shared/components/macro/navigation";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
 
 export const metadata: Metadata = {
-  title: "MalaKwyzz",
   description: "Are you up to the task?",
+  title: "MalaKwyzz",
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -26,13 +20,12 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     <html lang="en" suppressHydrationWarning>
       <body
         className={classNames(geistSans.variable, geistMono.variable, "antialiased bg-background dark:bg-foreground")}
-        style={{ backgroundPositionX: x }}
       >
         <Providers>
           <NavBar />
           <main
             className="m-auto flex w-full py-10 px-6 flex-col items-center justify-between bg-blend-lighten bg-background bg-[url(@/../public/sketch-world-map.png)] bg-cover dark:bg-foreground  max-w-sm min-w-[344px]"
-            style={{ minHeight: "calc(100dvh - 40px)" }}
+            style={{ backgroundPositionX: x, minHeight: "calc(100dvh - 40px)" }}
           >
             {children}
           </main>

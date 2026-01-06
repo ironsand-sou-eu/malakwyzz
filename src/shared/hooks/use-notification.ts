@@ -8,46 +8,41 @@ interface NotificationMsgParams {
 }
 
 export default function useNotification() {
-  const defaultSuccessStyles = {
-    position: "absolute",
-    bottom: "20px",
-    right: "20px",
-    padding: "15px",
-    background: "linear-gradient(to right, #00b09b, #96c93d)",
-    maxWidth: "max-content",
-  };
-
-  function error(text: string, { durationInMs = 3000, style = defaultSuccessStyles }: NotificationMsgParams = {}) {
+  function baseToast({ durationInMs, style, text }: NotificationMsgParams & { text: string }) {
     Toast({
-      text,
+      close: true,
       duration: durationInMs,
       gravity: "bottom",
+      offset: { x: 0, y: 100 },
       position: "right",
       stopOnFocus: true,
-      style,
+      style: { maxWidth: "100%", padding: "15px", ...style },
+      text,
     }).showToast();
   }
 
-  function warning(text: string, { durationInMs = 3000, style = defaultSuccessStyles }: NotificationMsgParams = {}) {
-    Toast({
+  function error(text: string, { durationInMs = 3000, style }: NotificationMsgParams = {}) {
+    baseToast({
+      durationInMs,
+      style: { background: "var(--bg-error)", ...style },
       text,
-      duration: durationInMs,
-      gravity: "bottom",
-      position: "right",
-      stopOnFocus: true,
-      style,
-    }).showToast();
+    });
   }
 
-  function success(text: string, { durationInMs = 3000, style = defaultSuccessStyles }: NotificationMsgParams = {}) {
-    Toast({
+  function success(text: string, { durationInMs = 3000, style }: NotificationMsgParams = {}) {
+    baseToast({
+      durationInMs,
+      style: { background: "var(--bg-success)", ...style },
       text,
-      duration: durationInMs,
-      gravity: "bottom",
-      position: "right",
-      stopOnFocus: true,
-      style,
-    }).showToast();
+    });
+  }
+
+  function warning(text: string, { durationInMs = 3000, style }: NotificationMsgParams = {}) {
+    baseToast({
+      durationInMs,
+      style: { background: "var(--bg-warning)", ...style },
+      text,
+    });
   }
 
   return { error, success, warning };

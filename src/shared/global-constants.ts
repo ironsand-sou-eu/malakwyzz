@@ -8,4 +8,6 @@ export const QUERY_STRING_SEARCH_PARAMS = {
   kind: "k",
 };
 
+export const GOAL_ASSOCIATED_VALUE = "mlk-goal";
+
 export const suspendedCountriesGameKinds: CountriesGameKind[] = ["hdi", "violence"];
