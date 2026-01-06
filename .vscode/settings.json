@@ -1,4 +1,6 @@
 {
   "javascript.preferences.importModuleSpecifier": "shortest",
-  "typescript.preferences.importModuleSpecifier": "shortest"
+  "typescript.preferences.importModuleSpecifier": "shortest",
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "biomejs.biome"
 }

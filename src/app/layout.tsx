@@ -25,16 +25,17 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={classNames(
-          geistSans.variable,
-          geistMono.variable,
-          "antialiased bg-background bg-[url(@/../public/sketch-world-map.png)] bg-cover dark:bg-foreground"
-        )}
+        className={classNames(geistSans.variable, geistMono.variable, "antialiased bg-background dark:bg-foreground")}
         style={{ backgroundPositionX: x }}
       >
         <Providers>
           <NavBar />
-          {children}
+          <main
+            className="m-auto flex w-full py-10 px-6 flex-col items-center justify-between bg-blend-lighten bg-background bg-[url(@/../public/sketch-world-map.png)] bg-cover dark:bg-foreground  max-w-sm min-w-[344px]"
+            style={{ minHeight: "calc(100dvh - 40px)" }}
+          >
+            {children}
+          </main>
         </Providers>
       </body>
     </html>

@@ -94,7 +94,7 @@ export class MlkDb {
         keyspace: this._keyspace,
       })
       .findOne({ kind }, { projection: { decimals: true } })
-      .then(d => d?.decimals);
+      .then((d) => d?.decimals);
   }
 
   public async getGameKinds() {
@@ -131,7 +131,7 @@ export class MlkDb {
         keyspace: "countries",
       })
       .find({}) //, { sort: { country_code: 1 } })
-      .map(i => ({ countryCode: i.country_code, possessionOf: i.possession_of }))
+      .map((i) => ({ countryCode: i.country_code, possessionOf: i.possession_of }))
       .toArray();
   }
 
@@ -141,10 +141,10 @@ export class MlkDb {
         ASTRA_TABLES.countriesByGdpPerCapita,
         {
           keyspace: ASTRA_KEYSPACES.countries,
-        }
+        },
       )
       .find({ year }, { sort: { gdp_per_capita: 1 } })
-      .map(i => ({
+      .map((i) => ({
         countryCode: i.country_code,
         possessionOf: i.possession_of,
         year: i.year,
@@ -159,7 +159,7 @@ export class MlkDb {
         keyspace: ASTRA_KEYSPACES.countries,
       })
       .find({ year }, { sort: { happiness: 1 } })
-      .map(i => ({ countryCode: i.country_code, possessionOf: i.possession_of, year: i.year, value: i.happiness }))
+      .map((i) => ({ countryCode: i.country_code, possessionOf: i.possession_of, year: i.year, value: i.happiness }))
       .toArray();
   }
 
@@ -169,7 +169,7 @@ export class MlkDb {
         keyspace: ASTRA_KEYSPACES.countries,
       })
       .find({ year }, { sort: { hdi: 1 } })
-      .map(i => ({ countryCode: i.country_code, possessionOf: i.possession_of, year: i.year, value: i.hdi }))
+      .map((i) => ({ countryCode: i.country_code, possessionOf: i.possession_of, year: i.year, value: i.hdi }))
       .toArray();
   }
 
@@ -178,8 +178,8 @@ export class MlkDb {
       .table<CountriesLandAreaTableSchema, CountriesLandAreaTablePrimaryKey>(ASTRA_TABLES.countriesByLandArea, {
         keyspace: ASTRA_KEYSPACES.countries,
       })
-      .find({}, { sort: { land_area: 1 } })
-      .map(i => ({ countryCode: i.country_code, possessionOf: i.possession_of, value: i.land_area }))
+      .find({}) // { sort: { land_area: 1 } })
+      .map((i) => ({ countryCode: i.country_code, possessionOf: i.possession_of, value: i.land_area }))
       .toArray();
   }
 
@@ -187,10 +187,10 @@ export class MlkDb {
     return this._db
       .table<CountriesLifeExpectancyTableSchema, CountriesLifeExpectancyTablePrimaryKey>(
         ASTRA_TABLES.countriesByLifeExpectancy,
-        { keyspace: ASTRA_KEYSPACES.countries }
+        { keyspace: ASTRA_KEYSPACES.countries },
       )
       .find({ year }, { sort: { life_expectancy: 1 } })
-      .map(i => ({
+      .map((i) => ({
         countryCode: i.country_code,
         possessionOf: i.possession_of,
         year: i.year,
@@ -225,7 +225,7 @@ export class MlkDb {
       .table<{ year: number }>(tableNamesByKind[kind], { keyspace: this._keyspace })
       .find({}, { projection: { year: true } })
       .toArray();
-    const amountByYear = Object.groupBy(years, i => i.year);
+    const amountByYear = Object.groupBy(years, (i) => i.year);
     const minCountriesCompliantYears = Object.entries(amountByYear)
       .map(([year, values]) => [year, values?.length ?? 0] as [string, number])
       .filter(([_, amount]) => amount >= MIN_COUNTRIES_PER_GAME)
