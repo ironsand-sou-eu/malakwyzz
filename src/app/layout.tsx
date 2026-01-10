@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
 import classNames from "classnames";
+import { cookies } from "next/headers";
+import { type Locale, NextIntlClientProvider } from "next-intl";
+import { COOKIE_KEYS } from "@/shared/global-constants";
 import NavBar from "../shared/components/macro/navigation";
 
 const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
@@ -14,6 +17,12 @@ export const metadata: Metadata = {
   title: "MalaKwyzz",
 };
 
+async function changeLocaleAction(locale: Locale) {
+  "use server";
+  const cookiesStore = await cookies();
+  cookiesStore.set(COOKIE_KEYS.locale, locale);
+}
+
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const { x } = await getBackgroundPositionByIp();
   return (
@@ -21,15 +30,19 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       <body
         className={classNames(geistSans.variable, geistMono.variable, "antialiased bg-background dark:bg-foreground")}
       >
-        <Providers>
-          <NavBar />
-          <main
-            className="m-auto flex w-full py-10 px-6 flex-col items-center justify-between bg-blend-lighten bg-background bg-[url(@/../public/sketch-world-map.png)] bg-cover dark:bg-foreground  max-w-sm min-w-[344px]"
-            style={{ backgroundPositionX: x, minHeight: "calc(100dvh - 40px)" }}
-          >
-            {children}
-          </main>
-        </Providers>
+        <NextIntlClientProvider>
+          <Providers>
+            <div className="m-auto w-full max-w-sm min-w-[344px]">
+              <NavBar changeLocaleAction={changeLocaleAction} />
+              <main
+                className="flex py-10 px-6 flex-col items-center justify-between bg-blend-lighten bg-background bg-[url(@/../public/sketch-world-map.png)] bg-cover dark:bg-foreground"
+                style={{ backgroundPositionX: x, minHeight: "calc(100dvh - 40px)" }}
+              >
+                {children}
+              </main>
+            </div>
+          </Providers>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

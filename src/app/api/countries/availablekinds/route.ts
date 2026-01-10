@@ -14,13 +14,13 @@ export type AvailableYearsPostBody = z.infer<typeof PostBodySchema>;
 
 export async function OPTIONS() {
   return new Response(null, {
-    status: 200,
     headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization",
       "Access-Control-Allow-Credentials": "true",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Origin": "*",
     },
+    status: 200,
   });
 }
 
@@ -35,10 +35,11 @@ export async function GET() {
 
 export async function getAvailableKindsInDb() {
   const t = await getTranslations("countries.kinds");
+
   const retrievedKinds = await db.getGameKinds();
   return retrievedKinds
     .map(({ applyYears, kind }) => ({ applyYears, kind, label: t(kind) }))
-    .filter(k => {
+    .filter((k) => {
       return isAllowedGameKind(k.kind) && !suspendedCountriesGameKinds.includes(k.kind);
     });
 }

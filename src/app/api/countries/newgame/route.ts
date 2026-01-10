@@ -40,8 +40,8 @@ export async function POST(req: Request) {
   } catch (e) {
     if (e instanceof UnavailableGameKindException) {
       return new MlkApiResponse().status("422-unprocessableContent").defaultRequestError({
-        type: e.name,
         message: "Unavailable game kind. Choose another and try again.",
+        type: e.name,
       });
     }
     return commonErrorHandlingPlaceAtBottom(e);
@@ -64,7 +64,7 @@ export async function createCountriesGameInDB({ userId, kind, year }: CreateCoun
   const sortedGameUniverse = sortGameUniverse(gameUniverseWithValues);
   const target = getGameTarget(sortedGameUniverse);
   const decimalsAdaptedGameUniverse = adaptGameUniverseDecimals(sortedGameUniverse, kind, kindDecimals);
-  const resp = await db.createGame({ gameUniverse: decimalsAdaptedGameUniverse, kind, userId, year, target });
+  const resp = await db.createGame({ gameUniverse: decimalsAdaptedGameUniverse, kind, target, userId, year });
   console.log("Game created", resp.insertedId?.toString(), target);
   return resp.insertedId as UUID;
 }
@@ -77,14 +77,15 @@ function getGameTarget(array: CountriesGameUniverse) {
 function getRandomItemFromArray<T>(array: T[]) {
   const randomValue = crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
   const targetIndex = Math.floor(randomValue * array.length);
-  return { value: array[targetIndex], index: targetIndex };
+  return { index: targetIndex, value: array[targetIndex] };
 }
 
 async function insertCountryNames(
-  universe: Awaited<ReturnType<typeof db.getGameUniverse>>
+  universe: Awaited<ReturnType<typeof db.getGameUniverse>>,
 ): Promise<CountriesGameUniverse> {
   const t = await getTranslations("countries.countries-by-code");
-  return universe.map(item => {
+
+  return universe.map((item) => {
     const translatedDoubleSlashSeparatedNames = item.countryCode ? t(item.countryCode) : "";
     return {
       ...item,
@@ -96,7 +97,7 @@ async function insertCountryNames(
 
 function insertValuesIfAlphabetical(kind: CountriesGameKind, universe: CountriesGameUniverse) {
   if (kind !== "alphabetical") return universe;
-  return universe.map(entry => ({ ...entry, value: entry.countryNames[0] }));
+  return universe.map((entry) => ({ ...entry, value: entry.countryNames[0] }));
 }
 
 function sortGameUniverse(universe: CountriesGameUniverse) {
@@ -110,11 +111,11 @@ function sortGameUniverse(universe: CountriesGameUniverse) {
 function adaptGameUniverseDecimals(
   universe: CountriesGameUniverse,
   kind: CountriesGameKind,
-  decimals?: number | null
+  decimals?: number | null,
 ): CountriesGameUniverse {
   if (kind === "alphabetical") return universe;
 
-  return universe.map(entry => {
+  return universe.map((entry) => {
     const valueAsString = String(entry.value) ?? "";
     const value = toDecimalNumberIfNeeded(valueAsString, decimals);
     return { ...entry, value };
