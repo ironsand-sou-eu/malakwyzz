@@ -11,3 +11,7 @@ export const QUERY_STRING_SEARCH_PARAMS = {
 export const GOAL_ASSOCIATED_VALUE = "mlk-goal";
 
 export const suspendedCountriesGameKinds: CountriesGameKind[] = ["hdi", "violence"];
+
+export const COOKIE_KEYS = {
+  locale: "MLK_LOC",
+};
