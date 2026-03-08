@@ -1,18 +1,9 @@
 {
-  "name": "malakwyzz",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "biome check",
-    "format": "biome format --write"
-  },
   "dependencies": {
     "@datastax/astra-db-ts": "^2.1.2",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@hiseb/confetti": "^2.1.0",
     "@mui/material": "^7.3.6",
     "@tanstack/react-query": "^5.90.12",
     "classnames": "^2.5.1",
@@ -35,5 +26,15 @@
     "babel-plugin-react-compiler": "1.0.0",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "name": "malakwyzz",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "format": "biome format --write",
+    "lint": "biome check",
+    "start": "next start"
+  },
+  "version": "0.1.0"
 }

@@ -8,6 +8,7 @@ import type { CountriesGameData } from "@/shared/global-interfaces";
 
 type CountriesContext = {
   guesses: CountriesGameData["guesses"];
+  isGameWon: boolean;
   addGuess: (guess: MakeGuessPostResponse) => void;
 };
 
@@ -31,10 +32,10 @@ export default function CountriesGameProvider({ children }: PropsWithChildren) {
 
   function addGuess(guess: MakeGuessPostResponse) {
     if (guess.directionToTarget === "win") {
-      setGuesses(prevValues => prevValues.filter(g => g.associatedValue !== GOAL_ASSOCIATED_VALUE));
+      setGuesses((prevValues) => prevValues.filter((g) => g.associatedValue !== GOAL_ASSOCIATED_VALUE));
     }
 
-    setGuesses(prevValues => {
+    setGuesses((prevValues) => {
       const allValues = [...prevValues, guess];
       return allValues.toSorted((a, b) => {
         const multiplier = { down: 1, up: -1, win: 0 };
@@ -45,5 +46,7 @@ export default function CountriesGameProvider({ children }: PropsWithChildren) {
     });
   }
 
-  return <CountriesContext.Provider value={{ addGuess, guesses }}>{children}</CountriesContext.Provider>;
+  const isGameWon = guesses.some((g) => g.directionToTarget === "win" && g.associatedValue !== GOAL_ASSOCIATED_VALUE);
+
+  return <CountriesContext.Provider value={{ addGuess, guesses, isGameWon }}>{children}</CountriesContext.Provider>;
 }

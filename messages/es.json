@@ -1,5 +1,6 @@
 {
   "an-error-ocurred": "An error ocurred, plyz try again",
+  "back": "Back",
   "countries": {
     "countries-by-code": {
       "ABW": "Aruba",
@@ -261,6 +262,7 @@
   "guess-me": "Guess me!",
   "guess-me-if-you-can": "Divíname si puedes!",
   "i-think-im-ready": "I think I'm ready!",
+  "new-game": "Jugar otra vez",
   "order-by": "Order by...",
   "ordered-by": "Ordered by: {kindAndYear}",
   "try-your-luck": "Some people rely on knowledge. Others, on sheer luck. What is your case?",

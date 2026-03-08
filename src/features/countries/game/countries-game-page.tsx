@@ -48,7 +48,7 @@ export default async function CountriesGamePage({ params }: PageProps<"/countrie
       </div>
       <CountriesGameProvider>
         <CountriesGuessesList />
-        <CountriesInput gameId={gameId.toString()} />
+        <CountriesInput gameId={gameId.toString()} kind={kind} />
       </CountriesGameProvider>
     </>
   );
