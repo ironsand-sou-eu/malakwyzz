@@ -62,8 +62,11 @@ export default function CountriesInput({ gameId }: CountriesInputProps) {
         className="cgp-guess__input"
         value={currentGuess}
         onChange={(ev) => setCurrentGuess(ev.currentTarget.value)}
+        disabled={makeGuessMutation.isPending}
       />
-      <Button type="submit">Guess</Button>
+      <Button type="submit" disabled={makeGuessMutation.isPending}>
+        Guess
+      </Button>
     </form>
   );
 }

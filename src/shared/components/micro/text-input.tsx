@@ -4,6 +4,7 @@ import type { ChangeEventHandler, KeyboardEventHandler, MouseEventHandler } from
 
 interface TextInputProps {
   className?: string;
+  disabled?: boolean;
   value?: string;
   onClick?: MouseEventHandler<HTMLInputElement>;
   onChange?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
