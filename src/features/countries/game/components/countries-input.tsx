@@ -8,6 +8,7 @@ import { TextInput } from "@/shared/components/micro/text-input";
 import { BASE_API_URL } from "@/shared/global-constants";
 import useNotification from "@/shared/hooks/use-notification";
 import { useCountriesGuesses } from "./countries-game-provider";
+import "./countries-input.css";
 
 type CountriesInputProps = {
   gameId: string;
@@ -48,7 +49,7 @@ export default function CountriesInput({ gameId }: CountriesInputProps) {
 
   function isInputValid() {
     if (!currentGuess.trim()) return false;
-    if (guesses.some(g => g.guess.toLowerCase().trim() === currentGuess.toLowerCase().trim())) {
+    if (guesses.some((g) => g.guess.toLowerCase().trim() === currentGuess.toLowerCase().trim())) {
       notify.warning(t("guess-already-made"));
       return false;
     }
@@ -57,7 +58,11 @@ export default function CountriesInput({ gameId }: CountriesInputProps) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-row items-center gap-6 text-center sm:text-left">
-      <TextInput value={currentGuess} onChange={ev => setCurrentGuess(ev.currentTarget.value)} />
+      <TextInput
+        className="cgp-guess__input"
+        value={currentGuess}
+        onChange={(ev) => setCurrentGuess(ev.currentTarget.value)}
+      />
       <Button type="submit">Guess</Button>
     </form>
   );

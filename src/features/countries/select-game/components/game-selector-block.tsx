@@ -6,9 +6,9 @@ import { useEffect, useState } from "react";
 import { Button } from "@/shared/components/micro/button";
 import { Title } from "@/shared/components/micro/titles";
 import { isAllowedGameKindByYear } from "@/shared/functions/typeguards";
-import { BASE_API_URL } from "../../shared/global-constants";
-import type { CountriesGameKind } from "../../shared/global-interfaces";
-import useNotification from "../../shared/hooks/use-notification";
+import { BASE_API_URL } from "../../../../shared/global-constants";
+import type { CountriesGameKind } from "../../../../shared/global-interfaces";
+import useNotification from "../../../../shared/hooks/use-notification";
 
 interface GameKind {
   kind: CountriesGameKind;
@@ -18,24 +18,24 @@ interface GameKind {
 
 function useCountriesGameKinds() {
   return useQuery({
-    queryKey: ["countriesGameKinds"],
     queryFn: async (): Promise<GameKind[]> => {
       const response = await fetch(`${BASE_API_URL}/api/countries/availablekinds`);
       const json = await response.json();
       return json.data;
     },
+    queryKey: ["countriesGameKinds"],
   });
 }
 
 function useAvailableYears(kind: CountriesGameKind) {
   return useQuery({
-    queryKey: ["availableYears", kind],
     queryFn: async (): Promise<number[] | null> => {
       if (!isAllowedGameKindByYear(kind)) return null;
       const response = await fetch(`${BASE_API_URL}/api/countries/availableyears?k=${kind}`);
       const json = await response.json();
       return json.data;
     },
+    queryKey: ["availableYears", kind],
   });
 }
 
@@ -75,9 +75,9 @@ export default function GameSelectorBlock() {
           name="kind"
           className="p-2 rounded-md capitalize text-dark-blue dark:text-light-green min-w-36"
           value={selectedKind?.kind}
-          onChange={ev => setSelectedKind(kinds?.find(k => k.kind === ev.currentTarget.value))}
+          onChange={(ev) => setSelectedKind(kinds?.find((k) => k.kind === ev.currentTarget.value))}
         >
-          {kinds?.map(kind => (
+          {kinds?.map((kind) => (
             <option className="capitalize" key={kind.kind} value={kind.kind}>
               {kind.label}
             </option>
@@ -88,9 +88,9 @@ export default function GameSelectorBlock() {
             name="year"
             className="p-2 rounded-md capitalize text-dark-blue dark:text-light-green min-w-20"
             value={selectedYear}
-            onChange={ev => setSelectedYear(parseInt(ev.currentTarget.value, 10))}
+            onChange={(ev) => setSelectedYear(parseInt(ev.currentTarget.value, 10))}
           >
-            {years.map(year => (
+            {years.map((year) => (
               <option key={year} value={year}>
                 {year}
               </option>
