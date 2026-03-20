@@ -35,8 +35,8 @@ export const ASTRA_TABLES = {
   countriesByHdi: "countries_by_hdi",
   countriesByLandArea: "countries_by_land_area",
   countriesByLifeExpectancy: "countries_by_life_expectancy",
-  countriesMetadata: "countries_metadata",
   countriesGamesData: "countries_games",
+  countriesMetadata: "countries_metadata",
 };
 
 interface CreateCountriesGameParams {
@@ -102,7 +102,7 @@ export class MlkDb {
       .table<CountryMetadataTableSchema, CountryMetadataTablePrimaryKey>(ASTRA_TABLES.countriesMetadata, {
         keyspace: this._keyspace,
       })
-      .find({}, { sort: { kind: 1 }, projection: { kind: true, applyYears: true } })
+      .find({}, { projection: { applyYears: true, kind: true }, sort: { kind: 1 } })
       .toArray();
   }
 
@@ -147,8 +147,8 @@ export class MlkDb {
       .map((i) => ({
         countryCode: i.country_code,
         possessionOf: i.possession_of,
-        year: i.year,
         value: i.gdp_per_capita,
+        year: i.year,
       }))
       .toArray();
   }
@@ -159,7 +159,7 @@ export class MlkDb {
         keyspace: ASTRA_KEYSPACES.countries,
       })
       .find({ year }, { sort: { happiness: 1 } })
-      .map((i) => ({ countryCode: i.country_code, possessionOf: i.possession_of, year: i.year, value: i.happiness }))
+      .map((i) => ({ countryCode: i.country_code, possessionOf: i.possession_of, value: i.happiness, year: i.year }))
       .toArray();
   }
 
@@ -169,7 +169,7 @@ export class MlkDb {
         keyspace: ASTRA_KEYSPACES.countries,
       })
       .find({ year }, { sort: { hdi: 1 } })
-      .map((i) => ({ countryCode: i.country_code, possessionOf: i.possession_of, year: i.year, value: i.hdi }))
+      .map((i) => ({ countryCode: i.country_code, possessionOf: i.possession_of, value: i.hdi, year: i.year }))
       .toArray();
   }
 
@@ -193,8 +193,8 @@ export class MlkDb {
       .map((i) => ({
         countryCode: i.country_code,
         possessionOf: i.possession_of,
-        year: i.year,
         value: i.life_expectancy,
+        year: i.year,
       }))
       .toArray();
   }

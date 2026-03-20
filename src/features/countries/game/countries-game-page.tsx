@@ -4,11 +4,11 @@ import { getTranslations } from "next-intl/server";
 import malakwizzLogo from "@/../public/malakwizz-logo.png";
 import { createCountriesGameInDB } from "@/app/api/countries/newgame/route";
 import CountriesGameProvider from "@/features/countries/game/components/countries-game-provider";
-import CountriesGuessesList from "@/features/countries/game/components/countries-guesses-list";
 import CountriesInput from "@/features/countries/game/components/countries-input";
 import UnabailableGamePage from "@/shared/components/macro/unavailable-game-page";
 import { Subtitle, Title } from "@/shared/components/micro/titles";
 import { isAllowedGameKind } from "@/shared/functions/typeguards";
+import CountriesGuessesList from "./components/countries-guesses-list";
 
 const USER_ID = "a4ae381b-4759-7fb2-8d69-afc96ccb4593" as unknown as UUID; //console.log(make dynamic)
 
