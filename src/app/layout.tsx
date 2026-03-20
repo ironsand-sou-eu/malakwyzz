@@ -35,7 +35,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             <div className="m-auto w-full max-w-sm min-w-[344px]">
               <NavBar changeLocaleAction={changeLocaleAction} />
               <main
-                className="flex py-10 px-6 flex-col items-center justify-between bg-blend-lighten bg-background bg-[url(@/../public/sketch-world-map.png)] bg-cover dark:bg-foreground"
+                className="flex pt-4 pb-9 px-6 flex-col items-center justify-between bg-blend-lighten bg-background bg-[url(@/../public/sketch-world-map.png)] bg-cover dark:bg-foreground"
                 style={{
                   // animation: "animatedBackground 500s linear infinite normal",
                   backgroundPositionX: x,

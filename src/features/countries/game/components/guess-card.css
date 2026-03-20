@@ -1,3 +1,6 @@
+@import "tailwindcss";
+
+
 .concavity-left-border::before {
   content: "";
   position: absolute;
@@ -27,13 +30,26 @@
 }
 
 .concavity-left {
-  mask-repeat: no-repeat;
-  mask-mode: alpha, alpha;
-  mask-position:
-    -124% center,
-    RIGHT center;
+  -webkit-mask-image: radial-gradient(#0000 50%, #bb8e8e 50%), linear-gradient(#000, #000);
+  mask-image: radial-gradient(#0000 50%, #bb8e8e 50%), linear-gradient(#000, #000);
+  -webkit-mask-position: -124%, 100%;
+  mask-position: -124%, 100%;
+  -webkit-mask-size:
+    61% 300%,
+    90% 100%;
   mask-size:
     61% 300%,
     90% 100%;
-  mask-image: radial-gradient(transparent 50%, #bb8e8e 50%), linear-gradient(black, black);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-source-type: alpha, alpha;
+  mask-mode: alpha, alpha;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  line-height: normal;
+  height: 44px;
+  white-space: nowrap;
+  display: block;
+  background-color: lab(53 24.86 56.45 / 0.43);
+  @apply max-w-full;
 }

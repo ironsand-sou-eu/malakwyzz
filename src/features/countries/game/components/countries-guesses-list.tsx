@@ -6,7 +6,7 @@ import { useCountriesGuesses } from "./countries-game-provider";
 import GuessCard from "./guess-card";
 
 export default function CountriesGuessesList() {
-  const { guesses, isGameWon } = useCountriesGuesses();
+  const { guesses, isGameLost, isGameWon } = useCountriesGuesses();
 
   const confettiTimeoutRef = useRef<NodeJS.Timeout>(null);
 
@@ -19,7 +19,6 @@ export default function CountriesGuessesList() {
     };
 
     function scheduleConfetti(delayInMs: number = 100) {
-      console.log({ delayInMs });
       const confettiTimeout = setTimeout(() => {
         throwRandomConfetti();
         const delay = 500 + Math.ceil(Math.random() * 1500);
@@ -48,7 +47,7 @@ export default function CountriesGuessesList() {
   }, [isGameWon]);
 
   return (
-    <section className="flex flex-col items-center text-center sm:text-left h-full min-w-full overflow-x-hidden">
+    <section className="flex flex-col items-center max-w-full text-center sm:text-left h-full min-w-full overflow-x-hidden">
       {guesses.map((guess) => (
         <GuessCard key={guess.timestamp} guess={guess} />
       ))}
