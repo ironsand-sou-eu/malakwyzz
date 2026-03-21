@@ -1,12 +1,15 @@
 "use client";
 
 import confetti from "@hiseb/confetti";
+import { useTranslations } from "next-intl";
 import { useEffect, useRef } from "react";
+import { Subtitle } from "@/shared/components/micro/titles";
 import { useCountriesGuesses } from "./countries-game-provider";
 import GuessCard from "./guess-card";
 
 export default function CountriesGuessesList() {
-  const { guesses, isGameLost, isGameWon } = useCountriesGuesses();
+  const { guesses, isGameLost, isGameWon, remainingAttempts } = useCountriesGuesses();
+  const t = useTranslations("");
 
   const confettiTimeoutRef = useRef<NodeJS.Timeout>(null);
 
@@ -48,6 +51,8 @@ export default function CountriesGuessesList() {
 
   return (
     <section className="flex flex-col items-center max-w-full text-center sm:text-left h-full min-w-full overflow-x-hidden">
+      {!isGameWon && !isGameLost && <Subtitle>{t("remaining-attempts", { remaining: remainingAttempts })}</Subtitle>}
+
       {guesses.map((guess) => (
         <GuessCard key={guess.timestamp} guess={guess} />
       ))}
