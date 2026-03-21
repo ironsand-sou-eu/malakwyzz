@@ -15,3 +15,5 @@ export const suspendedCountriesGameKinds: CountriesGameKind[] = ["hdi", "violenc
 export const COOKIE_KEYS = {
   locale: "MLK_LOC",
 };
+
+export const MAX_ATTEMPTS = 8;

@@ -2,7 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/shared/components/micro/button";
 import { TextInput } from "@/shared/components/micro/text-input";
 import { BASE_API_URL } from "@/shared/global-constants";
@@ -19,10 +19,26 @@ type CountriesInputProps = {
 
 export default function CountriesInput({ gameId, kind }: CountriesInputProps) {
   const notify = useNotification();
-  const { guesses, isGameWon, addGuess } = useCountriesGuesses();
+  const { guesses, isGameLost, isGameWon, addGuess } = useCountriesGuesses();
   const t = useTranslations("");
 
   const [currentGuess, setCurrentGuess] = useState("");
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const focusInput = useCallback(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Guesses is used as a token for refocus input
+  useEffect(() => {
+    focusInput();
+  }, [guesses]);
+
+  useEffect(() => {
+    document.addEventListener("click", focusInput);
+    return () => document.removeEventListener("click", focusInput);
+  }, [focusInput]);
 
   const makeGuessMutation = useMutation({
     mutationFn: async () => {
@@ -35,6 +51,7 @@ export default function CountriesInput({ gameId, kind }: CountriesInputProps) {
 
       if (!resp.ok) {
         notify.warning(jsonResp.message);
+        setTimeout(() => focusInput(), 100);
         return;
       }
 
@@ -45,7 +62,6 @@ export default function CountriesInput({ gameId, kind }: CountriesInputProps) {
 
   function handleSubmit(ev?: FormEvent<HTMLFormElement>) {
     ev?.preventDefault();
-    // console.log sanitize "currentGuess"
     if (!isInputValid()) return;
     makeGuessMutation.mutate();
   }
@@ -59,7 +75,7 @@ export default function CountriesInput({ gameId, kind }: CountriesInputProps) {
     return true;
   }
 
-  return isGameWon ? (
+  return isGameWon || isGameLost ? (
     <NewGameBlock kind={kind} />
   ) : (
     <form onSubmit={handleSubmit} className="flex flex-row items-center gap-6 text-center sm:text-left">
@@ -68,6 +84,8 @@ export default function CountriesInput({ gameId, kind }: CountriesInputProps) {
         value={currentGuess}
         onChange={(ev) => setCurrentGuess(ev.currentTarget.value)}
         disabled={makeGuessMutation.isPending}
+        inputRef={inputRef}
+        autoFocus
       />
       <Button type="submit" disabled={makeGuessMutation.isPending}>
         Guess

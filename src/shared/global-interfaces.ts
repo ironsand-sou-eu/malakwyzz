@@ -17,13 +17,13 @@ export type CountriesGameKind = keyof typeof countriesGameKinds;
 export type CountriesGameKindByYear = Exclude<keyof typeof countriesGameKinds, "alphabetical" | "landArea">;
 
 export const countriesGameKinds = {
-  alphabetical: { name: "alphabetical", applyYears: false },
-  gdpPerCapita: { name: "gdpPerCapita", applyYears: true },
-  happiness: { name: "happiness", applyYears: true },
-  hdi: { name: "hdi", applyYears: true },
-  landArea: { name: "landArea", applyYears: false },
-  lifeExpectancy: { name: "lifeExpectancy", applyYears: true },
-  violence: { name: "violence", applyYears: true },
+  alphabetical: { applyYears: false, name: "alphabetical" },
+  gdpPerCapita: { applyYears: true, name: "gdpPerCapita" },
+  happiness: { applyYears: true, name: "happiness" },
+  hdi: { applyYears: true, name: "hdi" },
+  landArea: { applyYears: false, name: "landArea" },
+  lifeExpectancy: { applyYears: true, name: "lifeExpectancy" },
+  violence: { applyYears: true, name: "violence" },
 } as const;
 
 export interface CountriesGameData {
@@ -35,10 +35,13 @@ export interface CountriesGameData {
   };
   guesses: {
     guess: string;
+    guessLabel: string;
     associatedValue: string | number;
     directionToTarget: "up" | "down" | "win";
     distanceToTarget: number;
     timestamp: string;
+    targetName?: string;
+    targetAssociatedValue?: string | number;
   }[];
   target: { index: number; value: string };
 }
