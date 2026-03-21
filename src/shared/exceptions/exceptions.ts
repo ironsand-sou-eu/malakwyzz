@@ -46,7 +46,7 @@ export class GameNotFoundException extends Error {
   public name: string;
   constructor() {
     super("Game not found, reload the page and try again.");
-    this.name = ValueNotFoundInGameException.name;
-    Object.setPrototypeOf(this, ValueNotFoundInGameException.prototype);
+    this.name = GameNotFoundException.name;
+    Object.setPrototypeOf(this, GameNotFoundException.prototype);
   }
 }
