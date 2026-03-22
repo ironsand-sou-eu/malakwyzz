@@ -113,7 +113,8 @@ export async function addGuessToGameInDB({
     return { code: "db.multiple-rowd-updated", error: true };
   }
 
-  if (gameInfo.guesses.length === MAX_ATTEMPTS - 1) {
+  const wasLastAttempt = gameInfo.guesses.length === MAX_ATTEMPTS - 1;
+  if (wasLastAttempt && newGuess.directionToTarget !== "win") {
     newGuess.targetName = gameInfo.context.gameUniverse[gameInfo.target.index].countryNames[0];
     newGuess.targetAssociatedValue = gameInfo.context.gameUniverse[gameInfo.target.index].value;
   }
