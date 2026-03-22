@@ -1,5 +1,6 @@
 {
   "an-error-ocurred": "An error ocurred, plyz try again",
+  "back": "Back",
   "countries": {
     "countries-by-code": {
       "ABW": "Aruba",
@@ -261,8 +262,10 @@
   "guess-me": "Guess me!",
   "guess-me-if-you-can": "Guess me if you can!",
   "i-think-im-ready": "I think I'm ready!",
+  "new-game": "New game",
   "order-by": "Order by...",
   "ordered-by": "Ordered by: {kindAndYear}",
+  "remaining-attempts": "Remaining attempts: {remaining}",
   "try-your-luck": "Some people rely on knowledge. Others, on sheer luck. What is your case?",
   "unavailable-game-type": "Unfortunately, he have not enough info about {localizedKind}. Try again with other combination.",
   "unavailable-game-type-by-year": "Unfortunately, he have not enough info about {localizedKind} in the year {year}. Try again with other combination."

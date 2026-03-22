@@ -24,7 +24,7 @@ async function changeLocaleAction(locale: Locale) {
 }
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const { x } = await getBackgroundPositionByIp();
+  const x = await getBackgroundPositionByIp();
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -35,8 +35,12 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             <div className="m-auto w-full max-w-sm min-w-[344px]">
               <NavBar changeLocaleAction={changeLocaleAction} />
               <main
-                className="flex py-10 px-6 flex-col items-center justify-between bg-blend-lighten bg-background bg-[url(@/../public/sketch-world-map.png)] bg-cover dark:bg-foreground"
-                style={{ backgroundPositionX: x, minHeight: "calc(100dvh - 40px)" }}
+                className="flex pt-4 pb-9 px-6 flex-col items-center justify-between bg-blend-lighten bg-background bg-[url(@/../public/sketch-world-map.png)] bg-cover dark:bg-foreground"
+                style={{
+                  // animation: "animatedBackground 500s linear infinite normal",
+                  backgroundPositionX: x,
+                  minHeight: "calc(100dvh - 40px)",
+                }}
               >
                 {children}
               </main>
@@ -49,25 +53,53 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 }
 
 async function getBackgroundPositionByIp() {
-  const FALLBACK_LAT = 40;
-  const FALLBACK_LONG = 0;
+  const FALLBACK_LONG = 8;
   try {
     const locationResp = await fetch("https://geolocation-db.com/json/");
-    const { latitude, longitude } = await locationResp.json();
-    return convertLatLongToPercent({ lat: latitude, long: longitude });
+    const { longitude } = await locationResp.json();
+    return convertLongToPercent({ long: longitude });
   } catch (e) {
     console.log("Unable to fetch location", e);
-    return convertLatLongToPercent({ lat: FALLBACK_LAT, long: FALLBACK_LONG });
+    return convertLongToPercent({ long: FALLBACK_LONG });
   }
 }
 
-function convertLatLongToPercent({ lat, long }: { lat: number; long: number }) {
-  const HEMISPHERE_LONGITUDE_DEGREES = 180;
-  const HEMISPHERE_LATITUDE_DEGREES = 90;
-  const decimalY = (long / HEMISPHERE_LONGITUDE_DEGREES) * 100;
-  const y = `${Math.floor(decimalY)}%`;
-  const decimalX = (lat / HEMISPHERE_LATITUDE_DEGREES) * 100;
-  const x = `${Math.floor(decimalX)}%`;
+function convertLongToPercent({ long }: { long: number }) {
+  const { initialLong, initialPercent, percentByDegree } = getCalcParametersByLong(long);
+  if (!initialLong) return 42;
+  const complementX = (initialLong - long) * percentByDegree;
+  console.log({ initialLong, initialPercent, long, percentByDegree, x: initialPercent - Math.floor(complementX) });
+  return `${initialPercent - Math.floor(complementX)}%`;
+}
 
-  return { x, y };
+function getCalcParametersByLong(long: number) {
+  if (long <= 140 && long >= -120) {
+    return {
+      initialLong: 140,
+      initialPercent: 113,
+      percentByDegree: 0.48,
+    };
+  }
+
+  if (long <= 180 && long > 140) {
+    return {
+      initialLong: 180,
+      initialPercent: -24,
+      percentByDegree: 0.2,
+    };
+  }
+
+  if (long < -120 && long >= -180) {
+    return {
+      initialLong: -120,
+      initialPercent: -9,
+      percentByDegree: 0.2,
+    };
+  }
+
+  return {
+    initialLong: null,
+    initialPercent: null,
+    percentByDegree: null,
+  };
 }

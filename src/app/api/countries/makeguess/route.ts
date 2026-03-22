@@ -9,6 +9,8 @@ import {
   ValueNotFoundInGameException,
 } from "@/shared/exceptions/exceptions";
 import { commonErrorHandlingPlaceAtBottom } from "@/shared/functions/api-error-handling";
+import { MAX_ATTEMPTS } from "@/shared/global-constants";
+import type { CountriesGameData } from "@/shared/global-interfaces";
 
 const PostBodySchema = z.object({
   gameId: z.string().nonempty(),
@@ -17,13 +19,7 @@ const PostBodySchema = z.object({
 
 export type MakeGuessPostBody = z.infer<typeof PostBodySchema>;
 
-export type MakeGuessPostResponse = {
-  guess: string;
-  associatedValue: string | number;
-  directionToTarget: "up" | "down" | "win";
-  distanceToTarget: number;
-  timestamp: string;
-};
+export type MakeGuessPostResponse = CountriesGameData["guesses"][number];
 
 export async function OPTIONS() {
   return new Response(null, {
@@ -50,13 +46,13 @@ export async function POST(req: Request) {
       guess,
     });
 
-    if (!guessResp)
+    if (guessResp.error)
       return new MlkApiResponse().defaultServerError({
         message: "There was a problem, it won't count towards your guesses.",
-        type: "Internal server error",
+        type: guessResp.code,
       });
 
-    return NextResponse.json(guessResp, { headers: { "Access-Control-Allow-Origin": "*" }, status: 201 });
+    return NextResponse.json(guessResp.data, { headers: { "Access-Control-Allow-Origin": "*" }, status: 201 });
   } catch (e) {
     if (e instanceof ValueNotFoundInGameException) {
       return new MlkApiResponse().defaultRequestError({ message: e.message, type: e.name });
@@ -74,44 +70,57 @@ interface AddGuessToGameInDBParams {
   gameId: UUID;
   guess: string;
 }
+
+type MlkFunctionResponse<T> = { error: false; data: T } | { error: true; code: string };
+
 export async function addGuessToGameInDB({
   gameId,
   guess,
-}: AddGuessToGameInDBParams): Promise<MakeGuessPostResponse | undefined> {
+}: AddGuessToGameInDBParams): Promise<MlkFunctionResponse<MakeGuessPostResponse>> {
   const gameInfo = await db.getGameInfo({ gameId });
   if (!gameInfo) throw new GameNotFoundException();
 
-  const foundIndex = gameInfo.context.gameUniverse.findIndex(item => {
+  if (gameInfo.guesses.length >= MAX_ATTEMPTS) {
+    return { code: "game.finished-game", error: true };
+  }
+
+  const foundIndex = gameInfo.context.gameUniverse.findIndex((item) => {
     const lcTrimmedGuess = guess.toLowerCase().trim();
     return (
       item.countryCode.toLowerCase().trim() === lcTrimmedGuess ||
-      item.countryNames.some(countryName => countryName.toLowerCase().trim() === lcTrimmedGuess)
+      item.countryNames.some((countryName) => countryName.toLowerCase().trim() === lcTrimmedGuess)
     );
   });
 
   if (foundIndex === -1) throw new ValueNotFoundInGameException();
 
-  const newGuess: Parameters<typeof db.addGuessToGame>[0]["newGuess"] = {
+  const newGuess: MakeGuessPostResponse = {
     associatedValue:
       gameInfo.context.gameUniverse[foundIndex].value ?? gameInfo.context.gameUniverse[foundIndex].countryCode,
     directionToTarget: getDirectionToTarget(foundIndex, gameInfo.target.index),
     distanceToTarget: Math.abs(foundIndex - gameInfo.target.index),
     guess,
+    guessLabel: gameInfo.context.gameUniverse[foundIndex].countryNames[0],
     timestamp: new Date().toISOString(),
   };
 
   const { modifiedCount } = await db.addGuessToGame({ gameId, newGuess });
+
   if (modifiedCount !== 1) {
-    console.error("Something strange happened while updating");
-    return;
+    return { code: "db.multiple-rowd-updated", error: true };
   }
 
-  return newGuess;
+  if (gameInfo.guesses.length === MAX_ATTEMPTS - 1) {
+    newGuess.targetName = gameInfo.context.gameUniverse[gameInfo.target.index].countryNames[0];
+    newGuess.targetAssociatedValue = gameInfo.context.gameUniverse[gameInfo.target.index].value;
+  }
+
+  return { data: newGuess, error: false };
 }
 
 function getDirectionToTarget(
   guessIndex: number,
-  targetIndex: number
+  targetIndex: number,
 ): Parameters<typeof db.addGuessToGame>[0]["newGuess"]["directionToTarget"] {
   if (guessIndex === targetIndex) return "win";
   if (guessIndex > targetIndex) return "up";
