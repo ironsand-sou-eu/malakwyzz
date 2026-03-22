@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Button } from "@/shared/components/micro/button";
 import "./countries-input.css";
-import type { CountriesGameKind } from "@/shared/global-interfaces";
+import type { CountriesGameKind } from "@/features/countries/countries-interfaces";
 
 type CountriesInputProps = {
   kind: CountriesGameKind;

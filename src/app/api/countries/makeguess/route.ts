@@ -2,6 +2,7 @@ import type { UUID } from "@datastax/astra-db-ts";
 import { NextResponse } from "next/server";
 import z from "zod";
 import { db } from "@/db/db";
+import type { CountriesGameData } from "@/features/countries/countries-interfaces";
 import { MlkApiResponse } from "@/shared/classes/mlk-api-response";
 import {
   GameNotFoundException,
@@ -10,7 +11,6 @@ import {
 } from "@/shared/exceptions/exceptions";
 import { commonErrorHandlingPlaceAtBottom } from "@/shared/functions/api-error-handling";
 import { MAX_ATTEMPTS } from "@/shared/global-constants";
-import type { CountriesGameData } from "@/shared/global-interfaces";
 
 const PostBodySchema = z.object({
   gameId: z.string().nonempty(),
@@ -94,13 +94,16 @@ export async function addGuessToGameInDB({
 
   if (foundIndex === -1) throw new ValueNotFoundInGameException();
 
+  const match = gameInfo.context.gameUniverse[foundIndex];
+
   const newGuess: MakeGuessPostResponse = {
-    associatedValue:
-      gameInfo.context.gameUniverse[foundIndex].value ?? gameInfo.context.gameUniverse[foundIndex].countryCode,
+    associatedValue: match.value ?? match.countryCode,
     directionToTarget: getDirectionToTarget(foundIndex, gameInfo.target.index),
     distanceToTarget: Math.abs(foundIndex - gameInfo.target.index),
     guess,
-    guessLabel: gameInfo.context.gameUniverse[foundIndex].countryNames[0],
+    guessLabel: match.countryNames[0],
+    isoCode: match.countryCode,
+    possessionOf: match.possessionOf,
     timestamp: new Date().toISOString(),
   };
 

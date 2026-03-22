@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
 import z from "zod";
 import { db } from "@/db/db";
+import type { CountriesGameKind, CountriesGameUniverse } from "@/features/countries/countries-interfaces";
 import { MlkApiResponse } from "@/shared/classes/mlk-api-response";
 import {
   InsufficientGameDataAmountException,
@@ -12,7 +13,6 @@ import {
 import { commonErrorHandlingPlaceAtBottom } from "@/shared/functions/api-error-handling";
 import { isAllowedGameKind } from "@/shared/functions/typeguards";
 import { MIN_COUNTRIES_PER_GAME } from "@/shared/global-constants";
-import type { CountriesGameKind, CountriesGameUniverse } from "@/shared/global-interfaces";
 
 const PostBodySchema = z.object({
   kind: z.string().nonempty(),

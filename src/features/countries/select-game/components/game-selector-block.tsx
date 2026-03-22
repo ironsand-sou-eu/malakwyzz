@@ -3,12 +3,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import type { CountriesGameKind } from "@/features/countries/countries-interfaces";
 import { Button } from "@/shared/components/micro/button";
 import { Title } from "@/shared/components/micro/titles";
 import { isAllowedGameKindByYear } from "@/shared/functions/typeguards";
-import { BASE_API_URL } from "../../../../shared/global-constants";
-import type { CountriesGameKind } from "../../../../shared/global-interfaces";
-import useNotification from "../../../../shared/hooks/use-notification";
+import { BASE_API_URL } from "@/shared/global-constants";
+import useNotification from "@/shared/hooks/use-notification";
 
 interface GameKind {
   kind: CountriesGameKind;

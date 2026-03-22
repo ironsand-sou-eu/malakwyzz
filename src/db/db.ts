@@ -1,12 +1,12 @@
 import { DataAPIClient, type Db, type UUID } from "@datastax/astra-db-ts";
-import { isAllowedGameKind, isAllowedGameKindByYear } from "@/shared/functions/typeguards";
-import { MIN_COUNTRIES_PER_GAME } from "@/shared/global-constants";
 import type {
   CountriesGameData,
   CountriesGameKind,
   CountriesGameKindByYear,
   CountriesGameUniverse,
-} from "@/shared/global-interfaces";
+} from "@/features/countries/countries-interfaces";
+import { isAllowedGameKind, isAllowedGameKindByYear } from "@/shared/functions/typeguards";
+import { MIN_COUNTRIES_PER_GAME } from "@/shared/global-constants";
 import type {
   CountriesAlphabeticalTablePrimaryKey,
   CountriesAlphabeticalTableSchema,

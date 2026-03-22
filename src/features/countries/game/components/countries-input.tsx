@@ -9,7 +9,7 @@ import { BASE_API_URL } from "@/shared/global-constants";
 import useNotification from "@/shared/hooks/use-notification";
 import { useCountriesGuesses } from "./countries-game-provider";
 import "./countries-input.css";
-import type { CountriesGameKind } from "@/shared/global-interfaces";
+import type { CountriesGameKind } from "@/features/countries/countries-interfaces";
 import NewGameBlock from "./new-game-block";
 
 type CountriesInputProps = {
