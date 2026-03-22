@@ -1,4 +1,4 @@
-import type { CountriesGameKind } from "./global-interfaces";
+import type { CountriesGameKind } from "@/features/countries/countries-interfaces";
 
 export const BASE_API_URL = "http://localhost:3000";
 

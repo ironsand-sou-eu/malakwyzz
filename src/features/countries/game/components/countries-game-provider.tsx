@@ -3,8 +3,8 @@
 import { useTranslations } from "next-intl";
 import { createContext, type PropsWithChildren, useContext, useState } from "react";
 import type { MakeGuessPostResponse } from "@/app/api/countries/makeguess/route";
+import type { CountriesGameData } from "@/features/countries/countries-interfaces";
 import { GOAL_ASSOCIATED_VALUE, MAX_ATTEMPTS } from "@/shared/global-constants";
-import type { CountriesGameData } from "@/shared/global-interfaces";
 
 export type GuessWithLossState = Omit<CountriesGameData["guesses"][number], "directionToTarget"> & {
   directionToTarget: CountriesGameData["guesses"][number]["directionToTarget"] | "loss";
@@ -33,6 +33,8 @@ export default function CountriesGameProvider({ children }: PropsWithChildren) {
       distanceToTarget: 0,
       guess: t("guess-me"),
       guessLabel: t("guess-me"),
+      isoCode: "",
+      possessionOf: "",
       timestamp: "",
     },
   ]);
@@ -61,6 +63,8 @@ export default function CountriesGameProvider({ children }: PropsWithChildren) {
       distanceToTarget: 0,
       guess: "",
       guessLabel: newGuess.targetName,
+      isoCode: "",
+      possessionOf: "",
       timestamp: new Date().toISOString(),
     };
     return entries.toSpliced(phantomGoalEntryIndex, 1, lostGameGoalGuess);

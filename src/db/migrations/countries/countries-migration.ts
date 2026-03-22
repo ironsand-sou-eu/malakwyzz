@@ -1,5 +1,5 @@
 import { type InferTablePrimaryKey, type InferTableSchema, Table } from "@datastax/astra-db-ts";
-import type { CountriesGameData } from "@/shared/global-interfaces";
+import type { CountriesGameData } from "@/features/countries/countries-interfaces";
 import { ASTRA_KEYSPACES, ASTRA_TABLES, MlkDb } from "../../db";
 import countriesAlphabeticalJsonData from "./countries_by_alphabetical.json";
 import countriesGdpPerCapitaJsonData from "./countries_by_gdp_per_capita.json";
@@ -30,8 +30,8 @@ const CountriesAlphabeticalTableDefinition = Table.schema({
 
 const CountriesLandAreaTableDefinition = Table.schema({
   columns: {
-    land_area: "text",
     country_code: "text",
+    land_area: "text",
     possession_of: "text",
   },
 
@@ -43,10 +43,10 @@ const CountriesLandAreaTableDefinition = Table.schema({
 
 const CountriesGdpPerCapitaTableDefinition = Table.schema({
   columns: {
-    year: "int",
     country_code: "text",
     gdp_per_capita: "text",
     possession_of: "text",
+    year: "int",
   },
 
   primaryKey: {
@@ -57,10 +57,10 @@ const CountriesGdpPerCapitaTableDefinition = Table.schema({
 
 const CountriesHappinessTableDefinition = Table.schema({
   columns: {
-    year: "int",
     country_code: "text",
     happiness: "text",
     possession_of: "text",
+    year: "int",
   },
 
   primaryKey: {
@@ -71,10 +71,10 @@ const CountriesHappinessTableDefinition = Table.schema({
 
 const CountriesHdiTableDefinition = Table.schema({
   columns: {
-    year: "int",
     country_code: "text",
     hdi: "text",
     possession_of: "text",
+    year: "int",
   },
 
   primaryKey: {
@@ -85,10 +85,10 @@ const CountriesHdiTableDefinition = Table.schema({
 
 const CountriesLifeExpectancyTableDefinition = Table.schema({
   columns: {
-    year: "int",
     country_code: "text",
     life_expectancy: "text",
     possession_of: "text",
+    year: "int",
   },
 
   primaryKey: {
@@ -99,9 +99,9 @@ const CountriesLifeExpectancyTableDefinition = Table.schema({
 
 const CountriesMetadataTableDefinition = Table.schema({
   columns: {
-    kind: "text",
     applyYears: "boolean",
     decimals: "tinyint",
+    kind: "text",
     source: "text",
   },
 
@@ -172,7 +172,7 @@ export async function createCountriesHappinessTable() {
       definition: CountriesHappinessTableDefinition,
       ifNotExists: true,
       keyspace: ASTRA_KEYSPACES.countries,
-    }
+    },
   );
 
   console.log(`Created table ${ASTRA_TABLES.countriesByHappiness}`);
@@ -189,7 +189,7 @@ export async function createCountriesHdiTable() {
       definition: CountriesHdiTableDefinition,
       ifNotExists: true,
       keyspace: ASTRA_KEYSPACES.countries,
-    }
+    },
   );
 
   console.log(`Created table ${ASTRA_TABLES.countriesByHdi}`);
@@ -206,7 +206,7 @@ export async function createCountriesLandAreaTable() {
       definition: CountriesLandAreaTableDefinition,
       ifNotExists: true,
       keyspace: ASTRA_KEYSPACES.countries,
-    }
+    },
   );
 
   console.log(`Created table ${ASTRA_TABLES.countriesByLandArea}`);
@@ -240,7 +240,7 @@ export async function createCountriesMetadataTable() {
       definition: CountriesMetadataTableDefinition,
       ifNotExists: true,
       keyspace: ASTRA_KEYSPACES.countries,
-    }
+    },
   );
 
   console.log(`Created table ${ASTRA_TABLES.countriesMetadata}`);
@@ -248,8 +248,8 @@ export async function createCountriesMetadataTable() {
 
 export async function createCountriesGamesCollection() {
   await migrationDb.db.createCollection<CountriesGameData>(ASTRA_TABLES.countriesGamesData, {
-    keyspace: ASTRA_KEYSPACES.countries,
     defaultId: { type: "uuid" },
+    keyspace: ASTRA_KEYSPACES.countries,
   });
   console.log(`Created collection ${ASTRA_TABLES.countriesGamesData}`);
 }
@@ -257,7 +257,7 @@ export async function createCountriesGamesCollection() {
 export async function seedCountriesAlphabeticalData() {
   const table = migrationDb.db.table<CountriesAlphabeticalTableSchema, CountriesAlphabeticalTablePrimaryKey>(
     ASTRA_TABLES.countriesByAlphabetical,
-    { keyspace: ASTRA_KEYSPACES.countries }
+    { keyspace: ASTRA_KEYSPACES.countries },
   );
 
   const insertedResult = await table.insertMany(countriesAlphabeticalJsonData);
@@ -267,7 +267,7 @@ export async function seedCountriesAlphabeticalData() {
 export async function seedCountriesGdpPerCapitaData() {
   const table = migrationDb.db.table<CountriesGdpPerCapitaTableSchema, CountriesGdpPerCapitaTablePrimaryKey>(
     ASTRA_TABLES.countriesByGdpPerCapita,
-    { keyspace: ASTRA_KEYSPACES.countries }
+    { keyspace: ASTRA_KEYSPACES.countries },
   );
 
   const insertedResult = await table.insertMany(countriesGdpPerCapitaJsonData);
@@ -277,7 +277,7 @@ export async function seedCountriesGdpPerCapitaData() {
 export async function seedCountriesHappinessData() {
   const table = migrationDb.db.table<CountriesHappinessTableSchema, CountriesHappinessTablePrimaryKey>(
     ASTRA_TABLES.countriesByHappiness,
-    { keyspace: ASTRA_KEYSPACES.countries }
+    { keyspace: ASTRA_KEYSPACES.countries },
   );
 
   const insertedResult = await table.insertMany(countriesHappinessJsonData);
@@ -287,7 +287,7 @@ export async function seedCountriesHappinessData() {
 export async function seedCountriesHdiData() {
   const table = migrationDb.db.table<CountriesHdiTableSchema, CountriesHdiTablePrimaryKey>(
     ASTRA_TABLES.countriesByHdi,
-    { keyspace: ASTRA_KEYSPACES.countries }
+    { keyspace: ASTRA_KEYSPACES.countries },
   );
 
   const insertedResult = await table.insertMany(countriesHdiJsonData);
@@ -297,7 +297,7 @@ export async function seedCountriesHdiData() {
 export async function seedCountriesLandAreaData() {
   const table = migrationDb.db.table<CountriesLandAreaTableSchema, CountriesLandAreaTablePrimaryKey>(
     ASTRA_TABLES.countriesByLandArea,
-    { keyspace: ASTRA_KEYSPACES.countries }
+    { keyspace: ASTRA_KEYSPACES.countries },
   );
 
   const insertedResult = await table.insertMany(countriesLandAreaJsonData);
@@ -307,7 +307,7 @@ export async function seedCountriesLandAreaData() {
 export async function seedCountriesLifeExpectancyData() {
   const table = migrationDb.db.table<CountriesLifeExpectancyTableSchema, CountriesLifeExpectancyTablePrimaryKey>(
     ASTRA_TABLES.countriesByLifeExpectancy,
-    { keyspace: ASTRA_KEYSPACES.countries }
+    { keyspace: ASTRA_KEYSPACES.countries },
   );
 
   const insertedResult = await table.insertMany(countriesLifeExpectancyJsonData);
@@ -317,7 +317,7 @@ export async function seedCountriesLifeExpectancyData() {
 export async function seedCountriesMetadata() {
   const table = migrationDb.db.table<CountryMetadataTableSchema, CountryMetadataTablePrimaryKey>(
     ASTRA_TABLES.countriesMetadata,
-    { keyspace: ASTRA_KEYSPACES.countries }
+    { keyspace: ASTRA_KEYSPACES.countries },
   );
 
   const insertedResult = await table.insertMany(countriesJsonMetadata);

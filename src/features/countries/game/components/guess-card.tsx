@@ -1,9 +1,10 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { FaChevronDown, FaChevronUp, FaFlagCheckered, FaQuestion, FaRegThumbsDown } from "react-icons/fa";
 import "./guess-card.css";
 import classNames from "classnames";
+import { findFlagUrlByIso3Code } from "country-flags-svg";
 import { GOAL_ASSOCIATED_VALUE } from "@/shared/global-constants";
 import type { GuessWithLossState } from "./countries-game-provider";
 
@@ -25,6 +26,12 @@ export default function GuessCard({ guess }: GuessCardProps) {
   const isGoalCard = associatedValue === GOAL_ASSOCIATED_VALUE;
   const label = generateCardLabel();
 
+  const [flagUrl, setFlagUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    setFlagUrl(getFlagUrl(guess));
+  }, [guess]);
+
   function generateCardLabel() {
     if (isGoalCard) return guessLabel;
     if (
@@ -37,6 +44,7 @@ export default function GuessCard({ guess }: GuessCardProps) {
   }
 
   const directionToTargetOrGoal = isGoalCard ? "goal" : directionToTarget;
+  if (guess.guessLabel.includes("Democratic")) console.log({ flagUrl });
 
   return (
     <article
@@ -46,11 +54,19 @@ export default function GuessCard({ guess }: GuessCardProps) {
         { "grayscale-50": isGoalCard, "opacity-50": isGoalCard },
       )}
     >
-      <div className="flex flex-row items-center gap-1 w-full px-8 py-2.5 concavity-left">{label}</div>
-      <div className="flex flex-row items-center gap-1 min-w-3/12 justify-center px-4 py-2.5 bg-red-400">
+      <div className="guess-card__label-container max-w-9/12 concavity-left">
+        {/** biome-ignore lint/performance/noImgElement: if we use a server component here, this file tree will cause a crash because of forcing confetti to run on server */}
+        {flagUrl && <img className="guess-card__flag" src={flagUrl} alt="flag" onError={() => setFlagUrl(null)} />}
+        <p className="guess-card__label">{label}</p>
+      </div>
+      <div className="flex flex-row items-center gap-1 w-3/12 justify-center px-4 py-2.5 bg-red-400">
         {directionIcons[directionToTargetOrGoal]}
         {distanceToTarget !== 0 && <div>{distanceToTarget}</div>}
       </div>
     </article>
   );
+}
+
+function getFlagUrl(guess: GuessWithLossState) {
+  return findFlagUrlByIso3Code(guess.isoCode) || null;
 }

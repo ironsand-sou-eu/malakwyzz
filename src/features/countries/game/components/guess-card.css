@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-
 .concavity-left-border::before {
   content: "";
   position: absolute;
@@ -44,12 +43,29 @@
   mask-repeat: no-repeat;
   -webkit-mask-source-type: alpha, alpha;
   mask-mode: alpha, alpha;
+  height: 44px;
+  background-color: lab(53 24.86 56.45 / 0.43);
+}
+
+.guess-card__label-container {
+  gap: 1ch;
+  @apply flex;
+  @apply flex-row;
+  @apply items-center;
+  @apply w-full;
+  @apply px-8;
+  @apply py-2.5;
+}
+
+.guess-card__flag {
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+} 
+
+.guess-card__label {
   text-overflow: ellipsis;
   overflow: hidden;
   line-height: normal;
-  height: 44px;
   white-space: nowrap;
-  display: block;
-  background-color: lab(53 24.86 56.45 / 0.43);
-  @apply max-w-full;
 }

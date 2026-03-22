@@ -1,5 +1,9 @@
+import {
+  type CountriesGameKind,
+  type CountriesGameKindByYear,
+  countriesGameKinds,
+} from "@/features/countries/countries-interfaces";
 import { suspendedCountriesGameKinds } from "../global-constants";
-import { type CountriesGameKind, type CountriesGameKindByYear, countriesGameKinds } from "../global-interfaces";
 
 export function isAllowedGameKind(kind: string | null | undefined): kind is CountriesGameKind {
   if (!kind) return false;
@@ -14,7 +18,7 @@ export function isAllowedGameKindByYear(kind: string | null | undefined): kind i
   if (!kind) return false;
   const availableGameKindsByYear = Object.values(countriesGameKinds)
     .map(({ applyYears, name }) => applyYears && name)
-    .filter(v => !!v);
+    .filter((v) => !!v);
   return (
     availableGameKindsByYear.includes(kind as (typeof availableGameKindsByYear)[number]) &&
     !suspendedCountriesGameKinds.includes(kind as CountriesGameKind)
