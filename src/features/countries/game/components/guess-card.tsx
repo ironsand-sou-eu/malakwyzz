@@ -59,7 +59,14 @@ export default function GuessCard({ guess }: GuessCardProps) {
         {flagUrl && <img className="guess-card__flag" src={flagUrl} alt="flag" onError={() => setFlagUrl(null)} />}
         <p className="guess-card__label">{label}</p>
       </div>
-      <div className="flex flex-row items-center gap-1 w-3/12 justify-center px-4 py-2.5 bg-red-400">
+      <div
+        className={classNames("flex flex-row items-center gap-1 w-3/12 justify-center px-4 py-2.5", {
+          "bg-amber-300": distanceToTarget > 0 && distanceToTarget <= 20,
+          "bg-gray-300": distanceToTarget === 0 && associatedValue === GOAL_ASSOCIATED_VALUE,
+          "bg-green-400": distanceToTarget === 0 && associatedValue !== GOAL_ASSOCIATED_VALUE,
+          "bg-red-400": distanceToTarget > 20,
+        })}
+      >
         {directionIcons[directionToTargetOrGoal]}
         {distanceToTarget !== 0 && <div>{distanceToTarget}</div>}
       </div>
