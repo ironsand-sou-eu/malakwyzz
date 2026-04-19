@@ -3,13 +3,8 @@
 import { useTranslations } from "next-intl";
 import { Button } from "@/shared/components/micro/button";
 import "./countries-input.css";
-import type { CountriesGameKind } from "@/features/countries/countries-interfaces";
 
-type CountriesInputProps = {
-  kind: CountriesGameKind;
-};
-
-export default function NewGameBlock({ kind }: CountriesInputProps) {
+export default function NewGameBlock() {
   const t = useTranslations("");
 
   const handleClickBack = () => {
@@ -17,7 +12,7 @@ export default function NewGameBlock({ kind }: CountriesInputProps) {
   };
 
   const handleClickNewGame = () => {
-    window.location.pathname = `/countries/${kind}`;
+    window.location.reload();
   };
 
   return (

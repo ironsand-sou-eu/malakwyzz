@@ -32,7 +32,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       >
         <NextIntlClientProvider>
           <Providers>
-            <div className="m-auto w-full max-w-sm min-w-[344px]">
+            <div className="m-auto w-full max-w-sm min-w-86">
               <NavBar changeLocaleAction={changeLocaleAction} />
               <main
                 className="flex pt-4 pb-9 px-6 flex-col items-center justify-between bg-blend-lighten bg-background bg-[url(@/../public/sketch-world-map.png)] bg-cover dark:bg-foreground"
@@ -68,7 +68,6 @@ function convertLongToPercent({ long }: { long: number }) {
   const { initialLong, initialPercent, percentByDegree } = getCalcParametersByLong(long);
   if (!initialLong) return 42;
   const complementX = (initialLong - long) * percentByDegree;
-  console.log({ initialLong, initialPercent, long, percentByDegree, x: initialPercent - Math.floor(complementX) });
   return `${initialPercent - Math.floor(complementX)}%`;
 }
 
