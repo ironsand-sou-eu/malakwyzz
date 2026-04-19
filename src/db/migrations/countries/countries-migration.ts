@@ -1,5 +1,7 @@
 import { type InferTablePrimaryKey, type InferTableSchema, Table } from "@datastax/astra-db-ts";
-import type { CountriesGameData } from "@/features/countries/countries-interfaces";
+import type { CountriesGameData, CountriesGameKindByYear } from "@/features/countries/countries-interfaces";
+import { isAllowedGameKind, isAllowedGameKindByYear } from "@/shared/functions/typeguards";
+import { MIN_COUNTRIES_PER_GAME } from "@/shared/global-constants";
 import { ASTRA_KEYSPACES, ASTRA_TABLES, MlkDb } from "../../db";
 import countriesAlphabeticalJsonData from "./countries_by_alphabetical.json";
 import countriesGdpPerCapitaJsonData from "./countries_by_gdp_per_capita.json";
@@ -100,6 +102,7 @@ const CountriesLifeExpectancyTableDefinition = Table.schema({
 const CountriesMetadataTableDefinition = Table.schema({
   columns: {
     applyYears: "boolean",
+    availableYears: { type: "list", valueType: "int" },
     decimals: "tinyint",
     kind: "text",
     source: "text",
@@ -320,6 +323,34 @@ export async function seedCountriesMetadata() {
     { keyspace: ASTRA_KEYSPACES.countries },
   );
 
-  const insertedResult = await table.insertMany(countriesJsonMetadata);
+  const metadata = insertAvailableYearsInMetadata();
+
+  const insertedResult = await table.insertMany(metadata);
   console.log(`Inserted ${insertedResult.insertedCount} rows.`);
+}
+
+function insertAvailableYearsInMetadata() {
+  return countriesJsonMetadata.map((kindMetadata) => {
+    if (!isAllowedGameKind(kindMetadata.kind) || !isAllowedGameKindByYear(kindMetadata.kind)) return kindMetadata;
+
+    const seedingFileByKind: Record<CountriesGameKindByYear, { year: number }[]> = {
+      gdpPerCapita: countriesGdpPerCapitaJsonData,
+      happiness: countriesHappinessJsonData,
+      hdi: countriesHdiJsonData,
+      lifeExpectancy: countriesLifeExpectancyJsonData,
+      violence: [],
+    };
+
+    const kindTableData = seedingFileByKind[kindMetadata.kind];
+    const entriesByYear = Object.groupBy(kindTableData, ({ year }) => year);
+    const years = Object.keys(entriesByYear)
+      .filter(
+        // biome-ignore lint/style/noNonNullAssertion: typescript assertion error
+        (year) => entriesByYear[Number(year)]?.length && entriesByYear[Number(year)]!.length > MIN_COUNTRIES_PER_GAME,
+      )
+      .map((yearStr) => Number(yearStr))
+      .toReversed();
+
+    return { ...kindMetadata, availableYears: years };
+  });
 }
