@@ -6,7 +6,6 @@ import type {
   CountriesGameUniverse,
 } from "@/features/countries/countries-interfaces";
 import { isAllowedGameKind, isAllowedGameKindByYear } from "@/shared/functions/typeguards";
-import { MIN_COUNTRIES_PER_GAME } from "@/shared/global-constants";
 import type {
   CountriesAlphabeticalTablePrimaryKey,
   CountriesAlphabeticalTableSchema,
@@ -214,23 +213,14 @@ export class MlkDb {
   public async getViableYearsForKind(kind: CountriesGameKind): Promise<number[]> {
     if (isAllowedGameKind(kind) && !isAllowedGameKindByYear(kind)) return [];
 
-    const tableNamesByKind: Record<CountriesGameKindByYear, string> = {
-      gdpPerCapita: ASTRA_TABLES.countriesByGdpPerCapita,
-      happiness: ASTRA_TABLES.countriesByHappiness,
-      hdi: ASTRA_TABLES.countriesByHdi,
-      lifeExpectancy: ASTRA_TABLES.countriesByLifeExpectancy,
-      violence: "",
-    };
-    const years = await this._db
-      .table<{ year: number }>(tableNamesByKind[kind], { keyspace: this._keyspace })
-      .find({}, { projection: { year: true } })
+    const metadata = await this._db
+      .table<CountryMetadataTableSchema, CountryMetadataTablePrimaryKey>(ASTRA_TABLES.countriesMetadata, {
+        keyspace: this._keyspace,
+      })
+      .find({ kind }, { projection: { availableYears: true } })
       .toArray();
-    const amountByYear = Object.groupBy(years, (i) => i.year);
-    const minCountriesCompliantYears = Object.entries(amountByYear)
-      .map(([year, values]) => [year, values?.length ?? 0] as [string, number])
-      .filter(([_, amount]) => amount >= MIN_COUNTRIES_PER_GAME)
-      .map(([year]) => parseInt(year, 10));
-    return minCountriesCompliantYears;
+
+    return metadata[0].availableYears;
   }
 }
 export const db = new MlkDb("countries");
