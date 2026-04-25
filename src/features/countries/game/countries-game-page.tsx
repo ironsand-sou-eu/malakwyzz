@@ -7,7 +7,7 @@ import CountriesGameProvider from "@/features/countries/game/components/countrie
 import CountriesInput from "@/features/countries/game/components/countries-input";
 import UnabailableGamePage from "@/shared/components/macro/unavailable-game-page";
 import { Subtitle, Title } from "@/shared/components/micro/titles";
-import { isAllowedGameKind } from "@/shared/functions/typeguards";
+import { isAllowedGameKind, isAllowedGameKindByYear } from "@/shared/functions/typeguards";
 import CountriesGuessesList from "./components/countries-guesses-list";
 
 const USER_ID = "a4ae381b-4759-7fb2-8d69-afc96ccb4593" as unknown as UUID; //console.log(make dynamic)
@@ -37,7 +37,7 @@ export default async function CountriesGamePage({ params }: PageProps<"/countrie
   const tGeneral = await getTranslations("");
 
   const localizedKind = tKind(kind);
-  const kindAndYear = kind === "alphabetical" ? localizedKind : `${localizedKind} - ${year}`;
+  const kindAndYear = isAllowedGameKindByYear(kind) ? `${localizedKind} - ${year}` : localizedKind;
 
   return (
     <>
