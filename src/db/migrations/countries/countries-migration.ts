@@ -9,6 +9,8 @@ import countriesHappinessJsonData from "./countries_by_happiness.json";
 import countriesHdiJsonData from "./countries_by_hdi.json";
 import countriesLandAreaJsonData from "./countries_by_land_area.json";
 import countriesLifeExpectancyJsonData from "./countries_by_life_expectancy.json";
+import countriesPopulationJsonData from "./countries_by_population.json";
+import countriesPopulationDensityJsonData from "./countries_by_population_density.json";
 import countriesJsonMetadata from "./countriesMetadata.json";
 
 class MigrationMlkDb extends MlkDb {
@@ -40,6 +42,32 @@ const CountriesLandAreaTableDefinition = Table.schema({
   primaryKey: {
     partitionBy: ["country_code"],
     partitionSort: { land_area: 1 },
+  },
+});
+
+const CountriesPopulationTableDefinition = Table.schema({
+  columns: {
+    country_code: "text",
+    population_2026: "text",
+    possession_of: "text",
+  },
+
+  primaryKey: {
+    partitionBy: ["country_code"],
+    partitionSort: { population_2026: 1 },
+  },
+});
+
+const CountriesPopulationDensityTableDefinition = Table.schema({
+  columns: {
+    country_code: "text",
+    density: "text",
+    possession_of: "text",
+  },
+
+  primaryKey: {
+    partitionBy: ["country_code"],
+    partitionSort: { density: 1 },
   },
 });
 
@@ -121,6 +149,14 @@ export type CountriesAlphabeticalTablePrimaryKey = InferTablePrimaryKey<typeof C
 export type CountriesLandAreaTableSchema = InferTableSchema<typeof CountriesLandAreaTableDefinition>;
 export type CountriesLandAreaTablePrimaryKey = InferTablePrimaryKey<typeof CountriesLandAreaTableDefinition>;
 
+export type CountriesPopulationTableSchema = InferTableSchema<typeof CountriesPopulationTableDefinition>;
+export type CountriesPopulationTablePrimaryKey = InferTablePrimaryKey<typeof CountriesPopulationTableDefinition>;
+
+export type CountriesPopulationDensityTableSchema = InferTableSchema<typeof CountriesPopulationDensityTableDefinition>;
+export type CountriesPopulationDensityTablePrimaryKey = InferTablePrimaryKey<
+  typeof CountriesPopulationDensityTableDefinition
+>;
+
 export type CountriesGdpPerCapitaTableSchema = InferTableSchema<typeof CountriesGdpPerCapitaTableDefinition>;
 export type CountriesGdpPerCapitaTablePrimaryKey = InferTablePrimaryKey<typeof CountriesGdpPerCapitaTableDefinition>;
 
@@ -139,14 +175,14 @@ export type CountryMetadataTableSchema = InferTableSchema<typeof CountriesMetada
 export type CountryMetadataTablePrimaryKey = InferTablePrimaryKey<typeof CountriesMetadataTableDefinition>;
 
 export async function createCountriesAlphabeticalTable() {
-  const table = await migrationDb.db.createTable<
-    CountriesAlphabeticalTableSchema,
-    CountriesAlphabeticalTablePrimaryKey
-  >(ASTRA_TABLES.countriesByAlphabetical, {
-    definition: CountriesAlphabeticalTableDefinition,
-    ifNotExists: true,
-    keyspace: ASTRA_KEYSPACES.countries,
-  });
+  await migrationDb.db.createTable<CountriesAlphabeticalTableSchema, CountriesAlphabeticalTablePrimaryKey>(
+    ASTRA_TABLES.countriesByAlphabetical,
+    {
+      definition: CountriesAlphabeticalTableDefinition,
+      ifNotExists: true,
+      keyspace: ASTRA_KEYSPACES.countries,
+    },
+  );
 
   console.log(`Created table ${ASTRA_TABLES.countriesByAlphabetical}`);
 }
@@ -215,6 +251,40 @@ export async function createCountriesLandAreaTable() {
   console.log(`Created table ${ASTRA_TABLES.countriesByLandArea}`);
 
   await table.createIndex("land_area_index", "land_area");
+
+  console.log("Indexed columns");
+}
+
+export async function createCountriesPopulationTable() {
+  const table = await migrationDb.db.createTable<CountriesPopulationTableSchema, CountriesPopulationTablePrimaryKey>(
+    ASTRA_TABLES.countriesByPopulation,
+    {
+      definition: CountriesPopulationTableDefinition,
+      ifNotExists: true,
+      keyspace: ASTRA_KEYSPACES.countries,
+    },
+  );
+
+  console.log(`Created table ${ASTRA_TABLES.countriesByPopulation}`);
+
+  await table.createIndex("population_index", "population_2026");
+
+  console.log("Indexed columns");
+}
+
+export async function createCountriesPopulationDensityTable() {
+  const table = await migrationDb.db.createTable<
+    CountriesPopulationDensityTableSchema,
+    CountriesPopulationDensityTablePrimaryKey
+  >(ASTRA_TABLES.countriesByPopulationDensity, {
+    definition: CountriesPopulationDensityTableDefinition,
+    ifNotExists: true,
+    keyspace: ASTRA_KEYSPACES.countries,
+  });
+
+  console.log(`Created table ${ASTRA_TABLES.countriesByPopulationDensity}`);
+
+  await table.createIndex("density_index", "density");
 
   console.log("Indexed columns");
 }
@@ -304,6 +374,26 @@ export async function seedCountriesLandAreaData() {
   );
 
   const insertedResult = await table.insertMany(countriesLandAreaJsonData);
+  console.log(`Inserted ${insertedResult.insertedCount} rows.`);
+}
+
+export async function seedCountriesPopulationData() {
+  const table = migrationDb.db.table<CountriesPopulationTableSchema, CountriesPopulationTablePrimaryKey>(
+    ASTRA_TABLES.countriesByPopulation,
+    { keyspace: ASTRA_KEYSPACES.countries },
+  );
+
+  const insertedResult = await table.insertMany(countriesPopulationJsonData);
+  console.log(`Inserted ${insertedResult.insertedCount} rows.`);
+}
+
+export async function seedCountriesPopulationDensityData() {
+  const table = migrationDb.db.table<CountriesPopulationDensityTableSchema, CountriesPopulationDensityTablePrimaryKey>(
+    ASTRA_TABLES.countriesByPopulationDensity,
+    { keyspace: ASTRA_KEYSPACES.countries },
+  );
+
+  const insertedResult = await table.insertMany(countriesPopulationDensityJsonData);
   console.log(`Inserted ${insertedResult.insertedCount} rows.`);
 }
 

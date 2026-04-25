@@ -19,6 +19,10 @@ import type {
   CountriesLandAreaTableSchema,
   CountriesLifeExpectancyTablePrimaryKey,
   CountriesLifeExpectancyTableSchema,
+  CountriesPopulationDensityTablePrimaryKey,
+  CountriesPopulationDensityTableSchema,
+  CountriesPopulationTablePrimaryKey,
+  CountriesPopulationTableSchema,
   CountryMetadataTablePrimaryKey,
   CountryMetadataTableSchema,
 } from "./migrations/countries/countries-migration";
@@ -34,6 +38,8 @@ export const ASTRA_TABLES = {
   countriesByHdi: "countries_by_hdi",
   countriesByLandArea: "countries_by_land_area",
   countriesByLifeExpectancy: "countries_by_life_expectancy",
+  countriesByPopulation: "countries_by_population",
+  countriesByPopulationDensity: "countries_by_population_density",
   countriesGamesData: "countries_games",
   countriesMetadata: "countries_metadata",
 };
@@ -119,6 +125,10 @@ export class MlkDb {
         return this.getHdiGameUniverse(params.year);
       case "lifeExpectancy":
         return this.getLifeExpectancyGameUniverse(params.year);
+      case "population":
+        return this.getPopulationGameUniverse();
+      case "populationDensity":
+        return this.getPopulationDensityGameUniverse();
       default:
         return [];
     }
@@ -179,6 +189,29 @@ export class MlkDb {
       })
       .find({}) // { sort: { land_area: 1 } })
       .map((i) => ({ countryCode: i.country_code, possessionOf: i.possession_of, value: i.land_area }))
+      .toArray();
+  }
+
+  private async getPopulationGameUniverse() {
+    return this._db
+      .table<CountriesPopulationTableSchema, CountriesPopulationTablePrimaryKey>(ASTRA_TABLES.countriesByPopulation, {
+        keyspace: ASTRA_KEYSPACES.countries,
+      })
+      .find({}) // { sort: { land_area: 1 } })
+      .map((i) => ({ countryCode: i.country_code, possessionOf: i.possession_of, value: i.population_2026 }))
+      .toArray();
+  }
+
+  private async getPopulationDensityGameUniverse() {
+    return this._db
+      .table<CountriesPopulationDensityTableSchema, CountriesPopulationDensityTablePrimaryKey>(
+        ASTRA_TABLES.countriesByPopulationDensity,
+        {
+          keyspace: ASTRA_KEYSPACES.countries,
+        },
+      )
+      .find({}) // { sort: { land_area: 1 } })
+      .map((i) => ({ countryCode: i.country_code, possessionOf: i.possession_of, value: i.density }))
       .toArray();
   }
 

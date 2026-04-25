@@ -18,6 +18,8 @@ export const countriesGameKinds = {
   hdi: { applyYears: true, name: "hdi" },
   landArea: { applyYears: false, name: "landArea" },
   lifeExpectancy: { applyYears: true, name: "lifeExpectancy" },
+  population: { applyYears: false, name: "population" },
+  populationDensity: { applyYears: false, name: "populationDensity" },
   violence: { applyYears: true, name: "violence" },
 } as const;
 
