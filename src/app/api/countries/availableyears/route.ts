@@ -18,7 +18,7 @@ export async function OPTIONS() {
       "Access-Control-Allow-Credentials": "true",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": "https://malakwyzz-csw186tp6-cesar-rodriguezs-projects-66b9f1c0.vercel.app/",
     },
     status: 200,
   });
