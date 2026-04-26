@@ -61,7 +61,9 @@ interface AddGuessToGameParams {
   newGuess: CountriesGameData["guesses"][number];
 }
 
-type GetGameUniverseParams = { kind: "alphabetical" | "landArea" } | { kind: CountriesGameKindByYear; year: number };
+type GetGameUniverseParams =
+  | { kind: "alphabetical" | "landArea" | "population" | "populationDensity" }
+  | { kind: CountriesGameKindByYear; year: number };
 
 export class MlkDb {
   protected _db: Db;
