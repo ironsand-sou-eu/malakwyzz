@@ -9,7 +9,10 @@ export type CountriesGameUniverse = {
 }[];
 
 export type CountriesGameKind = keyof typeof countriesGameKinds;
-export type CountriesGameKindByYear = Exclude<keyof typeof countriesGameKinds, "alphabetical" | "landArea">;
+export type CountriesGameKindByYear = Exclude<
+  keyof typeof countriesGameKinds,
+  "alphabetical" | "landArea" | "population" | "populationDensity"
+>;
 
 export const countriesGameKinds = {
   alphabetical: { applyYears: false, name: "alphabetical" },
@@ -18,6 +21,8 @@ export const countriesGameKinds = {
   hdi: { applyYears: true, name: "hdi" },
   landArea: { applyYears: false, name: "landArea" },
   lifeExpectancy: { applyYears: true, name: "lifeExpectancy" },
+  population: { applyYears: false, name: "population" },
+  populationDensity: { applyYears: false, name: "populationDensity" },
   violence: { applyYears: true, name: "violence" },
 } as const;
 

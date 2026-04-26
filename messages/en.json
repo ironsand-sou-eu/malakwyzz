@@ -254,6 +254,8 @@
       "hdi": "HDI",
       "landArea": "land area",
       "lifeExpectancy": "life expectancy",
+      "population": "Population",
+      "populationDensity": "Population density",
       "violence": "violence"
     }
   },

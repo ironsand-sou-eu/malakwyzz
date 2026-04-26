@@ -30,6 +30,18 @@
     "source": "World Bank Group - visited in 08.12.2025, https://data.worldbank.org/indicator/AG.LND.TOTL.K2"
   },
   {
+    "applyYears": false,
+    "decimals": 0,
+    "kind": "population",
+    "source": "Worldometer - visited in 25.04.2026, https://www.worldometers.info/world-population/"
+  },
+  {
+    "applyYears": false,
+    "decimals": 0,
+    "kind": "populationDensity",
+    "source": "Worldometer - visited in 25.04.2026, https://www.worldometers.info/world-population/"
+  },
+  {
     "applyYears": true,
     "decimals": 4,
     "kind": "lifeExpectancy",

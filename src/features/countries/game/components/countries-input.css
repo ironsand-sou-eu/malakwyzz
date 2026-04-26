@@ -1,5 +1,5 @@
 @reference "tailwindcss";
 
-.cgp-guess__input input{
+.cgp-guess__input input {
   @apply p-3;
 }

@@ -9,6 +9,8 @@ import {
   createCountriesLandAreaTable,
   createCountriesLifeExpectancyTable,
   createCountriesMetadataTable,
+  createCountriesPopulationDensityTable,
+  createCountriesPopulationTable,
   seedCountriesAlphabeticalData,
   seedCountriesGdpPerCapitaData,
   seedCountriesHappinessData,
@@ -16,6 +18,8 @@ import {
   seedCountriesLandAreaData,
   seedCountriesLifeExpectancyData,
   seedCountriesMetadata,
+  seedCountriesPopulationData,
+  seedCountriesPopulationDensityData,
 } from "@/db/migrations/countries/countries-migration";
 import { Title } from "@/shared/components/micro/titles";
 import { Button } from "../../shared/components/micro/button";
@@ -31,6 +35,8 @@ export default function Dashboard() {
       await createCountriesHdiTable();
       await createCountriesLandAreaTable();
       await createCountriesLifeExpectancyTable();
+      await createCountriesPopulationTable();
+      await createCountriesPopulationDensityTable();
       await createCountriesMetadataTable();
 
       await seedCountriesAlphabeticalData();
@@ -39,6 +45,8 @@ export default function Dashboard() {
       await seedCountriesHdiData();
       await seedCountriesLandAreaData();
       await seedCountriesLifeExpectancyData();
+      await seedCountriesPopulationData();
+      await seedCountriesPopulationDensityData();
       await seedCountriesMetadata();
 
       await createCountriesGamesCollection();
