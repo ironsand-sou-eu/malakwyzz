@@ -9,7 +9,10 @@ export type CountriesGameUniverse = {
 }[];
 
 export type CountriesGameKind = keyof typeof countriesGameKinds;
-export type CountriesGameKindByYear = Exclude<keyof typeof countriesGameKinds, "alphabetical" | "landArea">;
+export type CountriesGameKindByYear = Exclude<
+  keyof typeof countriesGameKinds,
+  "alphabetical" | "landArea" | "population" | "populationDensity"
+>;
 
 export const countriesGameKinds = {
   alphabetical: { applyYears: false, name: "alphabetical" },
