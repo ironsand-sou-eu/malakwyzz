@@ -15,12 +15,12 @@ interface GameKind {
   applyYears: boolean;
 }
 
-const { BASE_API_URL } = process.env;
+console.log({ baseUrl: process.env.BASE_API_URL });
 
 function useCountriesGameKinds() {
   return useQuery({
     queryFn: async (): Promise<GameKind[]> => {
-      const response = await fetch(`${BASE_API_URL}/api/countries/availablekinds`);
+      const response = await fetch(`${process.env.BASE_API_URL}/api/countries/availablekinds`);
       const json = await response.json();
       return json.data;
     },
@@ -32,7 +32,7 @@ function useAvailableYears(kind: CountriesGameKind) {
   return useQuery({
     queryFn: async (): Promise<number[] | null> => {
       if (!isAllowedGameKindByYear(kind)) return null;
-      const response = await fetch(`${BASE_API_URL}/api/countries/availableyears?k=${kind}`);
+      const response = await fetch(`${process.env.BASE_API_URL}/api/countries/availableyears?k=${kind}`);
       const json = await response.json();
       return json.data;
     },

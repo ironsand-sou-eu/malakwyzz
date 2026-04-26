@@ -13,13 +13,12 @@ const PostBodySchema = z.object({
 export type AvailableYearsPostBody = z.infer<typeof PostBodySchema>;
 
 export async function OPTIONS() {
-  const { BASE_API_URL } = process.env;
   return new Response(null, {
     headers: {
       "Access-Control-Allow-Credentials": "true",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Origin": `${BASE_API_URL}`,
+      "Access-Control-Allow-Origin": `${process.env.BASE_API_URL}`,
     },
     status: 200,
   });
