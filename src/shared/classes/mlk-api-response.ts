@@ -57,8 +57,8 @@ export class MlkApiResponse {
   private _fineGrainedHeaders: Headers | null = null;
   private _fineGrainedStatus: number | null = null;
   private _defaultHeaders: Headers = new Headers({
-    "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
+    "Content-Type": "application/json",
   });
 
   public status(status: keyof typeof HTTP_STATUS) {
@@ -79,22 +79,22 @@ export class MlkApiResponse {
 
   public defaultRequestError(err: ApiErrorResponseBody) {
     return new Response(JSON.stringify(err), {
-      status: this._fineGrainedStatus ?? HTTP_STATUS["400-badRequest"],
       headers: mergeHeaders(this._defaultHeaders, this._fineGrainedHeaders),
+      status: this._fineGrainedStatus ?? HTTP_STATUS["400-badRequest"],
     });
   }
 
   public defaultServerError(err: ApiErrorResponseBody) {
     return new Response(JSON.stringify(err), {
-      status: this._fineGrainedStatus ?? HTTP_STATUS["500-internalServerError"],
       headers: mergeHeaders(this._defaultHeaders, this._fineGrainedHeaders),
+      status: this._fineGrainedStatus ?? HTTP_STATUS["500-internalServerError"],
     });
   }
 
   public json(body: object) {
     return new Response(JSON.stringify(body), {
-      status: this._fineGrainedStatus ?? HTTP_STATUS["200-ok"],
       headers: mergeHeaders(this._defaultHeaders, this._fineGrainedHeaders),
+      status: this._fineGrainedStatus ?? HTTP_STATUS["200-ok"],
     });
   }
 }

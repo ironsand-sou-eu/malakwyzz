@@ -9,15 +9,13 @@ import { BASE_API_URL } from "@/shared/global-constants";
 import useNotification from "@/shared/hooks/use-notification";
 import { useCountriesGuesses } from "./countries-game-provider";
 import "./countries-input.css";
-import type { CountriesGameKind } from "@/features/countries/countries-interfaces";
 import NewGameBlock from "./new-game-block";
 
 type CountriesInputProps = {
   gameId: string;
-  kind: CountriesGameKind;
 };
 
-export default function CountriesInput({ gameId, kind }: CountriesInputProps) {
+export default function CountriesInput({ gameId }: CountriesInputProps) {
   const notify = useNotification();
   const { guesses, isGameLost, isGameWon, addGuess } = useCountriesGuesses();
   const t = useTranslations("");
@@ -76,7 +74,7 @@ export default function CountriesInput({ gameId, kind }: CountriesInputProps) {
   }
 
   return isGameWon || isGameLost ? (
-    <NewGameBlock kind={kind} />
+    <NewGameBlock />
   ) : (
     <form onSubmit={handleSubmit} className="flex flex-row items-center gap-6 text-center sm:text-left">
       <TextInput
