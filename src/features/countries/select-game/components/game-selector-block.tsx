@@ -15,6 +15,8 @@ interface GameKind {
   applyYears: boolean;
 }
 
+console.log({ baseUrl: process.env.BASE_API_URL });
+
 function useCountriesGameKinds() {
   return useQuery({
     queryFn: async (): Promise<GameKind[]> => {
