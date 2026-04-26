@@ -39,7 +39,7 @@ export default function CountriesInput({ gameId }: CountriesInputProps) {
 
   const makeGuessMutation = useMutation({
     mutationFn: async () => {
-      const resp = await fetch(`${process.env.BASE_API_URL}/api/countries/makeguess`, {
+      const resp = await fetch(`/api/countries/makeguess`, {
         body: JSON.stringify({ gameId, guess: currentGuess }),
         headers: { "Content-Type": "application/json" },
         method: "POST",
