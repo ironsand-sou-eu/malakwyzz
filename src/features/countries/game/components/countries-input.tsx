@@ -5,11 +5,12 @@ import { useTranslations } from "next-intl";
 import { type FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/shared/components/micro/button";
 import { TextInput } from "@/shared/components/micro/text-input";
-import { BASE_API_URL } from "@/shared/global-constants";
 import useNotification from "@/shared/hooks/use-notification";
 import { useCountriesGuesses } from "./countries-game-provider";
 import "./countries-input.css";
 import NewGameBlock from "./new-game-block";
+
+const { BASE_API_URL } = process.env;
 
 type CountriesInputProps = {
   gameId: string;
