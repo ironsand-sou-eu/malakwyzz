@@ -57,7 +57,7 @@ export class MlkApiResponse {
   private _fineGrainedHeaders: Headers | null = null;
   private _fineGrainedStatus: number | null = null;
   private _defaultHeaders: Headers = new Headers({
-    "Access-Control-Allow-Origin": "https://malakwyzz-csw186tp6-cesar-rodriguezs-projects-66b9f1c0.vercel.app/",
+    "Access-Control-Allow-Origin": "https://malakwyzz.vercel.app/",
     "Content-Type": "application/json",
   });
 
