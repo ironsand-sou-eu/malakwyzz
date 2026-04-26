@@ -21,15 +21,13 @@ export type MakeGuessPostBody = z.infer<typeof PostBodySchema>;
 
 export type MakeGuessPostResponse = CountriesGameData["guesses"][number];
 
-const { BASE_API_URL } = process.env;
-
 export async function OPTIONS() {
   return new Response(null, {
     headers: {
       "Access-Control-Allow-Credentials": "true",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Origin": `${BASE_API_URL}`,
+      "Access-Control-Allow-Origin": `${process.env.BASE_API_URL}`,
     },
     status: 200,
   });
@@ -56,7 +54,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(guessResp.data, {
       headers: {
-        "Access-Control-Allow-Origin": `${BASE_API_URL}`,
+        "Access-Control-Allow-Origin": `${process.env.BASE_API_URL}`,
       },
       status: 201,
     });

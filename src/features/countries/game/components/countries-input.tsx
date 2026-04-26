@@ -10,8 +10,6 @@ import { useCountriesGuesses } from "./countries-game-provider";
 import "./countries-input.css";
 import NewGameBlock from "./new-game-block";
 
-const { BASE_API_URL } = process.env;
-
 type CountriesInputProps = {
   gameId: string;
 };
@@ -41,7 +39,7 @@ export default function CountriesInput({ gameId }: CountriesInputProps) {
 
   const makeGuessMutation = useMutation({
     mutationFn: async () => {
-      const resp = await fetch(`${BASE_API_URL}/api/countries/makeguess`, {
+      const resp = await fetch(`${process.env.BASE_API_URL}/api/countries/makeguess`, {
         body: JSON.stringify({ gameId, guess: currentGuess }),
         headers: { "Content-Type": "application/json" },
         method: "POST",

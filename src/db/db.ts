@@ -75,14 +75,12 @@ export class MlkDb {
   }
 
   private connectToDatabase(): Db {
-    const { ASTRA_API_ENDPOINT: endpoint, ASTRA_APPLICATION_TOKEN: token } = process.env;
-
-    if (!token || !endpoint) {
+    if (!process.env.ASTRA_APPLICATION_TOKEN || !process.env.ASTRA_API_ENDPOINT) {
       throw new Error("Environment variables API_ENDPOINT and APPLICATION_TOKEN must be defined.");
     }
 
     const client = new DataAPIClient();
-    const database = client.db(endpoint, { token });
+    const database = client.db(process.env.ASTRA_API_ENDPOINT, { token: process.env.ASTRA_APPLICATION_TOKEN });
 
     console.log(`Connected to database ${database.id}`);
 
