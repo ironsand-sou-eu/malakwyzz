@@ -27,7 +27,7 @@ export async function OPTIONS() {
       "Access-Control-Allow-Credentials": "true",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": "https://malakwyzz.vercel.app/",
     },
     status: 200,
   });
@@ -52,7 +52,12 @@ export async function POST(req: Request) {
         type: guessResp.code,
       });
 
-    return NextResponse.json(guessResp.data, { headers: { "Access-Control-Allow-Origin": "*" }, status: 201 });
+    return NextResponse.json(guessResp.data, {
+      headers: {
+        "Access-Control-Allow-Origin": "https://malakwyzz.vercel.app/",
+      },
+      status: 201,
+    });
   } catch (e) {
     if (e instanceof ValueNotFoundInGameException) {
       return new MlkApiResponse().defaultRequestError({ message: e.message, type: e.name });
