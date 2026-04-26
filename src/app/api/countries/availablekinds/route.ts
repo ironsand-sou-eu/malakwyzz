@@ -18,7 +18,7 @@ export async function OPTIONS() {
       "Access-Control-Allow-Credentials": "true",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Origin": "https://malakwyzz.vercel.app/",
+      "Access-Control-Allow-Origin": `${process.env.BASE_API_URL}`,
     },
     status: 200,
   });

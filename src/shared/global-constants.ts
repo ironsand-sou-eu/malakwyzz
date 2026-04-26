@@ -1,7 +1,5 @@
 import type { CountriesGameKind } from "@/features/countries/countries-interfaces";
 
-export const BASE_API_URL = "http://localhost:3000";
-
 export const MIN_COUNTRIES_PER_GAME = 100;
 
 export const QUERY_STRING_SEARCH_PARAMS = {

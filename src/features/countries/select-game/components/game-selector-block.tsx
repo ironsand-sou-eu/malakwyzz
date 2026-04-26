@@ -7,7 +7,6 @@ import type { CountriesGameKind } from "@/features/countries/countries-interface
 import { Button } from "@/shared/components/micro/button";
 import { Title } from "@/shared/components/micro/titles";
 import { isAllowedGameKindByYear } from "@/shared/functions/typeguards";
-import { BASE_API_URL } from "@/shared/global-constants";
 import useNotification from "@/shared/hooks/use-notification";
 
 interface GameKind {
@@ -19,7 +18,7 @@ interface GameKind {
 function useCountriesGameKinds() {
   return useQuery({
     queryFn: async (): Promise<GameKind[]> => {
-      const response = await fetch(`${BASE_API_URL}/api/countries/availablekinds`);
+      const response = await fetch(`/api/countries/availablekinds`);
       const json = await response.json();
       return json.data;
     },
@@ -31,7 +30,7 @@ function useAvailableYears(kind: CountriesGameKind) {
   return useQuery({
     queryFn: async (): Promise<number[] | null> => {
       if (!isAllowedGameKindByYear(kind)) return null;
-      const response = await fetch(`${BASE_API_URL}/api/countries/availableyears?k=${kind}`);
+      const response = await fetch(`/api/countries/availableyears?k=${kind}`);
       const json = await response.json();
       return json.data;
     },
