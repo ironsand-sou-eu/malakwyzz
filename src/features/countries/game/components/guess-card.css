@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+.concavity-left-border::before {
+  content: "";
+  position: absolute;
+  border: var(--color-amber-900) 4px solid;
+  border-radius: 50%;
+  height: 250%;
+  aspect-ratio: 1;
+  top: -200%;
+  left: -100px;
+  transform: translateY(50%);
+  z-index: 5;
+}
+
+.concavity-left-border {
+  position: relative;
+  overflow: hidden;
+  animation: slide-from-left ease-in 300ms;
+}
+
+@keyframes slide-from-left {
+  from {
+    transform: translateX(-120%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.concavity-left {
+  -webkit-mask-image: radial-gradient(#0000 50%, #bb8e8e 50%), linear-gradient(#000, #000);
+  mask-image: radial-gradient(#0000 50%, #bb8e8e 50%), linear-gradient(#000, #000);
+  -webkit-mask-position: -124%, 100%;
+  mask-position: -124%, 100%;
+  -webkit-mask-size:
+    61% 300%,
+    90% 100%;
+  mask-size:
+    61% 300%,
+    90% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-source-type: alpha, alpha;
+  mask-mode: alpha, alpha;
+  height: 44px;
+  background-color: lab(53 24.86 56.45 / 0.43);
+}
+
+.guess-card__label-container {
+  gap: 1ch;
+  @apply flex;
+  @apply flex-row;
+  @apply items-center;
+  @apply w-full;
+  @apply px-8;
+  @apply py-2.5;
+}
+
+.guess-card__flag {
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+} 
+
+.guess-card__label {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  line-height: normal;
+  white-space: nowrap;
+}

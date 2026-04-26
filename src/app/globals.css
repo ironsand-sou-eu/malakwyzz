@@ -1,26 +1,32 @@
 @import "tailwindcss";
+@import "toastify-js/src/toastify.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fdf6dce8;
+  --foreground: #010035;
+  --bg-error: linear-gradient(to right, rgb(165 6 6), rgb(0 121 157));
+  --bg-success: linear-gradient(to right, #00b09b, #96c93d);
+  --bg-warning: linear-gradient(to right, rgb(153 120 1), rgb(150, 201, 61));
+
+  box-sizing: border-box;
 }
 
 @theme inline {
+  --color-light-green: #b8f5d3;
+  --color-dark-blue: #053676;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes animatedBackground {
+  from {
+    background-position-x: 0;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  to {
+    background-position-x: 100%;
+  }
 }
