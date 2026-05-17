@@ -1,5 +1,6 @@
 import type { UUID } from "@datastax/astra-db-ts";
 import { NextResponse } from "next/server";
+import { getLocale } from "next-intl/server";
 import z from "zod";
 import { db } from "@/db/db";
 import type { CountriesGameData } from "@/features/countries/countries-interfaces";
@@ -89,11 +90,13 @@ export async function addGuessToGameInDB({
     return { code: "game.finished-game", error: true };
   }
 
+  const locale = await getLocale();
+  const collator = new Intl.Collator(locale, { ignorePunctuation: true, sensitivity: "base", usage: "search" });
   const foundIndex = gameInfo.context.gameUniverse.findIndex((item) => {
-    const lcTrimmedGuess = guess.toLowerCase().trim();
+    const lcTrimmedGuess = guess.toLocaleLowerCase().trim();
     return (
-      item.countryCode.toLowerCase().trim() === lcTrimmedGuess ||
-      item.countryNames.some((countryName) => countryName.toLowerCase().trim() === lcTrimmedGuess)
+      collator.compare(item.countryCode.toLocaleLowerCase().trim(), lcTrimmedGuess) === 0 ||
+      item.countryNames.some((countryName) => collator.compare(countryName.toLowerCase().trim(), lcTrimmedGuess) === 0)
     );
   });
 

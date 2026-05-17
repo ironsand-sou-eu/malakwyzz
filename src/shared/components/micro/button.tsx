@@ -8,6 +8,7 @@ interface ButtonProps extends PropsWithChildren {
   className?: string;
   color?: string;
   disabled?: boolean;
+  loading?: boolean;
   ref?: Ref<HTMLButtonElement>;
   variant?: "filled" | "outlined" | "text";
   onClick?: () => void;

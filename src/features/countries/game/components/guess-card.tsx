@@ -40,7 +40,7 @@ export default function GuessCard({ guess }: GuessCardProps) {
     ) {
       return guessLabel;
     }
-    return `${guessLabel} - ${associatedValue}`;
+    return `${guessLabel} - ${associatedValue.toLocaleString()}`;
   }
 
   const directionToTargetOrGoal = isGoalCard ? "goal" : directionToTarget;

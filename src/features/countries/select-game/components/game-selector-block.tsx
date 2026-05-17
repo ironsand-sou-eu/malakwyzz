@@ -41,11 +41,11 @@ function useAvailableYears(kind: CountriesGameKind) {
 export default function GameSelectorBlock() {
   const notify = useNotification();
   const t = useTranslations();
-
   const { data: kinds, error: kindError } = useCountriesGameKinds();
 
   const [selectedYear, setSelectedYear] = useState<number>();
   const [selectedKind, setSelectedKind] = useState<GameKind>();
+  const [shouldNavigate, setShouldNavigate] = useState(false);
 
   const { data: years, error } = useAvailableYears(selectedKind?.kind ?? "alphabetical");
 
@@ -57,6 +57,14 @@ export default function GameSelectorBlock() {
     if (years) setSelectedYear(years[0]);
     else setSelectedYear(undefined);
   }, [years]);
+
+  useEffect(() => {
+    if (!shouldNavigate || !selectedKind) return;
+    if (!selectedKind.applyYears) window.location.pathname = `/countries/${selectedKind.kind}`;
+    if (selectedKind.applyYears && selectedYear) {
+      window.location.pathname = `/countries/${selectedKind.kind}/${selectedYear}`;
+    }
+  }, [shouldNavigate, selectedKind, selectedYear]);
 
   useEffect(() => {
     if (error) notify.error(error.message);
@@ -100,13 +108,8 @@ export default function GameSelectorBlock() {
       <Button
         type="button"
         disabled={!selectedKind || (selectedKind.applyYears && !selectedYear)}
-        onClick={() => {
-          if (!selectedKind) return;
-          if (!selectedKind.applyYears) window.location.pathname = `/countries/${selectedKind.kind}`;
-          if (selectedKind.applyYears && selectedYear) {
-            window.location.pathname = `/countries/${selectedKind.kind}/${selectedYear}`;
-          }
-        }}
+        loading={shouldNavigate}
+        onClick={() => setShouldNavigate(true)}
       >
         {t("i-think-im-ready")}
       </Button>
