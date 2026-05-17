@@ -84,7 +84,7 @@ export default function CountriesInput({ gameId }: CountriesInputProps) {
         inputRef={inputRef}
         autoFocus
       />
-      <Button type="submit" disabled={makeGuessMutation.isPending}>
+      <Button type="submit" loading={makeGuessMutation.isPending} disabled={makeGuessMutation.isPending}>
         Guess
       </Button>
     </form>
