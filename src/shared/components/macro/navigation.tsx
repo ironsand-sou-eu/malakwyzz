@@ -3,6 +3,7 @@
 
 import classNames from "classnames";
 import { findFlagUrlByIso2Code } from "country-flags-svg";
+import { usePathname } from "next/navigation";
 import { type Locale, useLocale } from "next-intl";
 import { useTheme } from "next-themes";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -34,15 +35,15 @@ interface LocaleSelectorProps {
 
 function LocaleSelector({ changeLocaleAction }: LocaleSelectorProps) {
   const locale = useLocale();
+  const pathname = usePathname();
 
   const [visible, setVisible] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: it is a necessary dependency, clearly used inside the function
   const isInGamePage = useMemo(() => {
     const GAME_PAGE_REGEX = /\/.+\/.+/g;
-    return GAME_PAGE_REGEX.test(location.pathname);
-  }, [location?.pathname]);
+    return GAME_PAGE_REGEX.test(pathname);
+  }, [pathname]);
 
   const availableLanguages: Parameters<typeof DropDown<string>>[0]["options"] = [
     {
