@@ -1,6 +1,6 @@
 import type { UUID } from "@datastax/astra-db-ts";
 import { NextResponse } from "next/server";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import z from "zod";
 import { db } from "@/db/db";
 import type { CountriesGameKind, CountriesGameUniverse } from "@/features/countries/countries-interfaces";
@@ -54,6 +54,7 @@ interface CreateCountriesGameInDBParams {
   year: number;
 }
 export async function createCountriesGameInDB({ userId, kind, year }: CreateCountriesGameInDBParams) {
+  const locale = await getLocale();
   if (!isAllowedGameKind(kind)) throw new UnavailableGameKindException();
   const kindDecimalsPromise = db.getDecimalsForKind(kind);
   const gameUniversePromise = db.getGameUniverse({ kind, year });
@@ -64,7 +65,7 @@ export async function createCountriesGameInDB({ userId, kind, year }: CreateCoun
   const sortedGameUniverse = sortGameUniverse(gameUniverseWithValues);
   const target = getGameTarget(sortedGameUniverse);
   const decimalsAdaptedGameUniverse = adaptGameUniverseDecimals(sortedGameUniverse, kind, kindDecimals);
-  const resp = await db.createGame({ gameUniverse: decimalsAdaptedGameUniverse, kind, target, userId, year });
+  const resp = await db.createGame({ gameUniverse: decimalsAdaptedGameUniverse, kind, locale, target, userId, year });
   console.log("Game created", resp.insertedId?.toString(), target);
   return resp.insertedId as UUID;
 }

@@ -1,12 +1,12 @@
 // biome-ignore-all lint: This is the adapter file
 import MuiMenu from "@mui/material/Menu";
 import MuiMenuItem from "@mui/material/MenuItem";
-import type { PropsWithChildren, Ref } from "react";
+import type { CSSProperties, PropsWithChildren, ReactNode, Ref } from "react";
 
 interface DropDownProps<T> extends PropsWithChildren {
   anchorElement: HTMLElement | null;
   isOpen: boolean;
-  options: { id: string; value: T; label: string }[];
+  options: { id: string; value: T; label: string; startIcon?: ReactNode }[];
   onClickOption: (value: T) => void;
   onClose: () => void;
 }
@@ -22,7 +22,8 @@ export function DropDown<T = unknown>({ anchorElement, isOpen, options, onClickO
       }}
     >
       {options.map((o) => (
-        <MuiMenuItem key={o.id} onClick={() => onClickOption(o.value)}>
+        <MuiMenuItem className="dropdown__dd-item" key={o.id} onClick={() => onClickOption(o.value)}>
+          <div className="dropdown__dd-item-icon">{o.startIcon}</div>
           {o.label}
         </MuiMenuItem>
       ))}
