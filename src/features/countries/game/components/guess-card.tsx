@@ -44,7 +44,6 @@ export default function GuessCard({ guess }: GuessCardProps) {
   }
 
   const directionToTargetOrGoal = isGoalCard ? "goal" : directionToTarget;
-  if (guess.guessLabel.includes("Democratic")) console.log({ flagUrl });
 
   return (
     <article

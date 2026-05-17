@@ -57,7 +57,7 @@ export class MlkApiResponse {
   private _fineGrainedHeaders: Headers | null = null;
   private _fineGrainedStatus: number | null = null;
   private _defaultHeaders: Headers = new Headers({
-    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Origin": `${process.env.BASE_API_URL}`,
     "Content-Type": "application/json",
   });
 

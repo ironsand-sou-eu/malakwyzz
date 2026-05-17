@@ -30,6 +30,7 @@ export interface CountriesGameData {
   player_id: UUID;
   context: {
     kind: CountriesGameKind;
+    locale: string;
     year: number;
     gameUniverse: CountriesGameUniverse;
   };

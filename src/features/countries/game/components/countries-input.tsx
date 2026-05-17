@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { type FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/shared/components/micro/button";
 import { TextInput } from "@/shared/components/micro/text-input";
-import { BASE_API_URL } from "@/shared/global-constants";
 import useNotification from "@/shared/hooks/use-notification";
 import { useCountriesGuesses } from "./countries-game-provider";
 import "./countries-input.css";
@@ -40,7 +39,7 @@ export default function CountriesInput({ gameId }: CountriesInputProps) {
 
   const makeGuessMutation = useMutation({
     mutationFn: async () => {
-      const resp = await fetch(`${BASE_API_URL}/api/countries/makeguess`, {
+      const resp = await fetch(`/api/countries/makeguess`, {
         body: JSON.stringify({ gameId, guess: currentGuess }),
         headers: { "Content-Type": "application/json" },
         method: "POST",

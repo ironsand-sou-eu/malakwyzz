@@ -50,6 +50,7 @@ interface CreateCountriesGameParams {
   gameUniverse: CountriesGameUniverse;
   year: number;
   target: CountriesGameData["target"];
+  locale: string;
 }
 
 interface GetCountriesGameGuessesParams {
@@ -75,14 +76,12 @@ export class MlkDb {
   }
 
   private connectToDatabase(): Db {
-    const { ASTRA_API_ENDPOINT: endpoint, ASTRA_APPLICATION_TOKEN: token } = process.env;
-
-    if (!token || !endpoint) {
+    if (!process.env.ASTRA_APPLICATION_TOKEN || !process.env.ASTRA_API_ENDPOINT) {
       throw new Error("Environment variables API_ENDPOINT and APPLICATION_TOKEN must be defined.");
     }
 
     const client = new DataAPIClient();
-    const database = client.db(endpoint, { token });
+    const database = client.db(process.env.ASTRA_API_ENDPOINT, { token: process.env.ASTRA_APPLICATION_TOKEN });
 
     console.log(`Connected to database ${database.id}`);
 
@@ -233,10 +232,10 @@ export class MlkDb {
       .toArray();
   }
 
-  public async createGame({ kind, gameUniverse, target, userId, year }: CreateCountriesGameParams) {
+  public async createGame({ kind, gameUniverse, locale, target, userId, year }: CreateCountriesGameParams) {
     return this._db
       .collection<CountriesGameData>(ASTRA_TABLES.countriesGamesData, { keyspace: ASTRA_KEYSPACES.countries })
-      .insertOne({ context: { gameUniverse, kind, year }, guesses: [], player_id: userId, target });
+      .insertOne({ context: { gameUniverse, kind, locale, year }, guesses: [], player_id: userId, target });
   }
 
   public async getGameInfo({ gameId }: GetCountriesGameGuessesParams) {
