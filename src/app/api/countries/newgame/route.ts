@@ -62,11 +62,10 @@ export async function createCountriesGameInDB({ userId, kind, year }: CreateCoun
   if (gameUniverse.length < MIN_COUNTRIES_PER_GAME) throw new InsufficientGameDataAmountException();
   const countryNamedGameUniverse = await insertCountryNames(gameUniverse);
   const gameUniverseWithValues = insertValuesIfAlphabetical(kind, countryNamedGameUniverse);
-  const sortedGameUniverse = sortGameUniverse(gameUniverseWithValues);
+  const sortedGameUniverse = await sortGameUniverse(gameUniverseWithValues);
   const target = getGameTarget(sortedGameUniverse);
   const decimalsAdaptedGameUniverse = adaptGameUniverseDecimals(sortedGameUniverse, kind, kindDecimals);
   const resp = await db.createGame({ gameUniverse: decimalsAdaptedGameUniverse, kind, locale, target, userId, year });
-  console.log("Game created", resp.insertedId?.toString(), target);
   return resp.insertedId as UUID;
 }
 
@@ -101,11 +100,12 @@ function insertValuesIfAlphabetical(kind: CountriesGameKind, universe: Countries
   return universe.map((entry) => ({ ...entry, value: entry.countryNames[0] }));
 }
 
-function sortGameUniverse(universe: CountriesGameUniverse) {
+async function sortGameUniverse(universe: CountriesGameUniverse) {
+  const locale = await getLocale();
   if (!Number.isNaN(Number(universe[0].value))) {
     return universe.toSorted((entryA, entryB) => (entryB.value as number) - (entryA.value as number));
   }
-  const collator = new Intl.Collator("en", { sensitivity: "base" }); //console.log: set to correct locale
+  const collator = new Intl.Collator(locale, { sensitivity: "base" });
   return universe.toSorted((entryA, entryB) => collator.compare(`${entryA.value}`, `${entryB.value}`));
 }
 
