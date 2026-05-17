@@ -50,6 +50,7 @@ interface CreateCountriesGameParams {
   gameUniverse: CountriesGameUniverse;
   year: number;
   target: CountriesGameData["target"];
+  locale: string;
 }
 
 interface GetCountriesGameGuessesParams {
@@ -231,10 +232,10 @@ export class MlkDb {
       .toArray();
   }
 
-  public async createGame({ kind, gameUniverse, target, userId, year }: CreateCountriesGameParams) {
+  public async createGame({ kind, gameUniverse, locale, target, userId, year }: CreateCountriesGameParams) {
     return this._db
       .collection<CountriesGameData>(ASTRA_TABLES.countriesGamesData, { keyspace: ASTRA_KEYSPACES.countries })
-      .insertOne({ context: { gameUniverse, kind, year }, guesses: [], player_id: userId, target });
+      .insertOne({ context: { gameUniverse, kind, locale, year }, guesses: [], player_id: userId, target });
   }
 
   public async getGameInfo({ gameId }: GetCountriesGameGuessesParams) {
