@@ -1,8 +1,11 @@
+/** biome-ignore-all lint/performance/noImgElement: the flags are processed in the frontend */
 "use client";
 
+import classNames from "classnames";
+import { findFlagUrlByIso2Code } from "country-flags-svg";
 import { type Locale, useLocale } from "next-intl";
 import { useTheme } from "next-themes";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaGlobe } from "react-icons/fa";
 import { FiMoon, FiSun } from "react-icons/fi";
@@ -35,9 +38,43 @@ function LocaleSelector({ changeLocaleAction }: LocaleSelectorProps) {
   const [visible, setVisible] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const availableLanguages = [
-    { id: "en", label: "English", value: "en" },
-    { id: "es", label: "Español", value: "es" },
+  // biome-ignore lint/correctness/useExhaustiveDependencies: it is a necessary dependency, clearly used inside the function
+  const isInGamePage = useMemo(() => {
+    const GAME_PAGE_REGEX = /\/.+\/.+/g;
+    return GAME_PAGE_REGEX.test(location.pathname);
+  }, [location?.pathname]);
+
+  const availableLanguages: Parameters<typeof DropDown<string>>[0]["options"] = [
+    {
+      id: "en",
+      label: "English",
+      startIcon: <img src={findFlagUrlByIso2Code("gb")} alt="UK flag" />,
+      value: "en",
+    },
+    {
+      id: "es",
+      label: "Español",
+      startIcon: <img src={findFlagUrlByIso2Code("es")} alt="Bandera de España" />,
+      value: "es",
+    },
+    {
+      id: "pt",
+      label: "Português",
+      startIcon: <img src={findFlagUrlByIso2Code("br")} alt="Brazil flag" />,
+      value: "pt",
+    },
+    {
+      id: "ru",
+      label: "Русcкий",
+      startIcon: <img src={findFlagUrlByIso2Code("ru")} alt="Russian flag" />,
+      value: "ru",
+    },
+    {
+      id: "ua",
+      label: "Українська",
+      startIcon: <img src={findFlagUrlByIso2Code("ua")} alt="Ukrainian flag" />,
+      value: "ua",
+    },
   ];
 
   function handleChangeLng(value: string) {
@@ -50,11 +87,12 @@ function LocaleSelector({ changeLocaleAction }: LocaleSelectorProps) {
       <Button
         type="button"
         variant="text"
-        className="flex flex-row gap-2"
+        className={classNames("flex flex-row gap-2", { "opacity-50": isInGamePage })}
         color="var(--color-dark-blue)"
         id="locale-btn"
         ref={buttonRef}
         onClick={() => setVisible(true)}
+        disabled={isInGamePage}
       >
         <FaGlobe size="1.5em" className="cursor-pointer" />
         {locale}

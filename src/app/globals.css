@@ -22,6 +22,19 @@
   --font-mono: var(--font-geist-mono);
 }
 
+.dropdown__dd-item {
+  gap: 1ch;
+
+  & .dropdown__dd-item-icon {
+    width: 2.5ch;
+
+    & img {
+      max-height: 0.8rem;
+      border-radius: 3px;
+    }
+  }
+}
+
 @keyframes animatedBackground {
   from {
     background-position-x: 0;
