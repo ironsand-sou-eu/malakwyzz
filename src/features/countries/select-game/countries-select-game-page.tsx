@@ -9,7 +9,7 @@ export default async function CountriesSelectGamePage() {
 
   return (
     <>
-      <div>
+      <div className="flex flex-col gap-4">
         <Image className="mx-auto" src={malakwizzLogo} alt="Malakwizz logo" width={300} height={300} priority />
         <Title>{t("geo-geeks-gather")}</Title>
         <Subtitle>{t("try-your-luck")}</Subtitle>
