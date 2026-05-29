@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import z from "zod";
 import { db } from "@/db/db";
 import type { CountriesGameData } from "@/features/countries/countries-interfaces";
+import { createComparisonCollator } from "@/i18n/helpers";
 import { MlkApiResponse } from "@/shared/classes/mlk-api-response";
 import {
   GameNotFoundException,
@@ -91,9 +92,8 @@ export async function addGuessToGameInDB({
   if (gameInfo.guesses.length >= MAX_ATTEMPTS) {
     return { code: "game.finished-game", error: true };
   }
-
   const locale = await getLocale();
-  const collator = new Intl.Collator(locale, { ignorePunctuation: true, sensitivity: "base", usage: "search" });
+  const collator = await createComparisonCollator(locale);
   const foundIndex = gameInfo.context.gameUniverse.findIndex((item) => {
     const lcTrimmedGuess = guess.toLocaleLowerCase().trim();
     return (
