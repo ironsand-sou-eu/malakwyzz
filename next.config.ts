@@ -10,9 +10,9 @@ const nextConfig: NextConfig = {
     return {
       beforeFiles: [
         {
-          destination: "/countries/:path*",
+          destination: "/countries/$1",
           has: [{ type: "host", value: "countries.malakwyzz.com" }],
-          source: "/:path*",
+          source: "/((?!_next|api|favicon.ico|.*\\..*).*)",
         },
         {
           destination: "/countries",
