@@ -1,6 +1,5 @@
 "use client";
 
-import confetti from "@hiseb/confetti";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef } from "react";
 import { Subtitle } from "@/shared/components/micro/titles";
@@ -14,6 +13,14 @@ export default function CountriesGuessesList() {
   const confettiTimeoutRef = useRef<NodeJS.Timeout>(null);
 
   useEffect(() => {
+    let confetti: null | typeof import("@hiseb/confetti").default = null;
+
+    const loadConfetti = async () => {
+      confetti = (await import("@hiseb/confetti")).default;
+    };
+
+    if (!confetti) loadConfetti();
+
     if (!isGameWon) return;
     scheduleConfetti();
     return () => {
@@ -37,7 +44,7 @@ export default function CountriesGuessesList() {
       const x = 20 + Math.ceil(Math.random() * (window.innerWidth - 40));
       const y = 50 + Math.ceil(Math.random() * (window.innerWidth - 100));
       const velocity = 150 + Math.ceil(Math.random() * 150);
-      confetti({
+      confetti?.({
         count,
         fade,
         position: {

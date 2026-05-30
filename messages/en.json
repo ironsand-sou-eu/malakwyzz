@@ -259,6 +259,14 @@
       "violence": "violence"
     }
   },
+  "error": {
+    "bad-request": "Bad request",
+    "game-not-found": "Request should have a content-type header of \"application/json\"",
+    "insufficient-game-data-amount": "The provided parameters point to a game with insufficient entities",
+    "unavailable-game-kind": "Game kind not allowed",
+    "unsuported-type": "Provided guess is not in the game set, try again.",
+    "value-not-found-in-game": "Game not found, reload the page and try again."
+  },
   "geo-geeks-gather": "Geo geeks around the world, behold! 😎🌍",
   "guess-already-made": "Wake up! You've already made this guess.",
   "guess-me": "Guess me!",
