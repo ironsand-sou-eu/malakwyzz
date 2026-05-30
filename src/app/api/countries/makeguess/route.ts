@@ -1,9 +1,10 @@
 import type { UUID } from "@datastax/astra-db-ts";
 import { NextResponse } from "next/server";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import z from "zod";
 import { db } from "@/db/db";
 import type { CountriesGameData } from "@/features/countries/countries-interfaces";
+import { createComparisonCollator } from "@/i18n/helpers";
 import { MlkApiResponse } from "@/shared/classes/mlk-api-response";
 import {
   GameNotFoundException,
@@ -37,7 +38,8 @@ export async function OPTIONS() {
 export async function POST(req: Request) {
   try {
     const contentType = req.headers.get("Content-Type");
-    if (contentType !== "application/json") throw new UnsuportedTypeException();
+    const errorT = await getTranslations("error");
+    if (contentType !== "application/json") throw new UnsuportedTypeException({ errorScopedTranslator: errorT });
 
     const body = await req.json();
     const { gameId, guess } = PostBodySchema.parse(body);
@@ -84,14 +86,14 @@ export async function addGuessToGameInDB({
   guess,
 }: AddGuessToGameInDBParams): Promise<MlkFunctionResponse<MakeGuessPostResponse>> {
   const gameInfo = await db.getGameInfo({ gameId });
-  if (!gameInfo) throw new GameNotFoundException();
+  const errorT = await getTranslations("error");
+  if (!gameInfo) throw new GameNotFoundException({ errorScopedTranslator: errorT });
 
   if (gameInfo.guesses.length >= MAX_ATTEMPTS) {
     return { code: "game.finished-game", error: true };
   }
-
   const locale = await getLocale();
-  const collator = new Intl.Collator(locale, { ignorePunctuation: true, sensitivity: "base", usage: "search" });
+  const collator = await createComparisonCollator(locale);
   const foundIndex = gameInfo.context.gameUniverse.findIndex((item) => {
     const lcTrimmedGuess = guess.toLocaleLowerCase().trim();
     return (
@@ -100,7 +102,7 @@ export async function addGuessToGameInDB({
     );
   });
 
-  if (foundIndex === -1) throw new ValueNotFoundInGameException();
+  if (foundIndex === -1) throw new ValueNotFoundInGameException({ errorScopedTranslator: errorT });
 
   const match = gameInfo.context.gameUniverse[foundIndex];
 

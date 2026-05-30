@@ -1,8 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useRef, useState } from "react";
 import type { CountriesGameKind } from "@/features/countries/countries-interfaces";
 import { Button } from "@/shared/components/micro/button";
 import { Title } from "@/shared/components/micro/titles";
@@ -39,13 +39,21 @@ function useAvailableYears(kind: CountriesGameKind) {
 }
 
 export default function GameSelectorBlock() {
+  const locale = useLocale();
   const notify = useNotification();
   const t = useTranslations();
-  const { data: kinds, error: kindError } = useCountriesGameKinds();
+  const { data: kinds, error: kindError, refetch } = useCountriesGameKinds();
 
   const [selectedYear, setSelectedYear] = useState<number>();
   const [selectedKind, setSelectedKind] = useState<GameKind>();
   const [shouldNavigate, setShouldNavigate] = useState(false);
+
+  const currentLocale = useRef<string>(locale);
+
+  useEffect(() => {
+    if (locale !== currentLocale.current) refetch();
+    currentLocale.current === locale;
+  }, [locale, refetch]);
 
   const { data: years, error } = useAvailableYears(selectedKind?.kind ?? "alphabetical");
 

@@ -25,7 +25,9 @@ export type NewGamePostBody = z.infer<typeof PostBodySchema>;
 export async function POST(req: Request) {
   try {
     const contentType = req.headers.get("Content-Type");
-    if (contentType !== "application/json") throw new UnsuportedTypeException();
+    const t = await getTranslations("error");
+
+    if (contentType !== "application/json") throw new UnsuportedTypeException({ errorScopedTranslator: t });
 
     const body = await req.json();
     const { kind, userId, year } = PostBodySchema.parse(body);
@@ -55,11 +57,13 @@ interface CreateCountriesGameInDBParams {
 }
 export async function createCountriesGameInDB({ userId, kind, year }: CreateCountriesGameInDBParams) {
   const locale = await getLocale();
-  if (!isAllowedGameKind(kind)) throw new UnavailableGameKindException();
+  const errorT = await getTranslations("error");
+  if (!isAllowedGameKind(kind)) throw new UnavailableGameKindException({ errorScopedTranslator: errorT });
   const kindDecimalsPromise = db.getDecimalsForKind(kind);
   const gameUniversePromise = db.getGameUniverse({ kind, year });
   const [kindDecimals, gameUniverse] = await Promise.all([kindDecimalsPromise, gameUniversePromise]);
-  if (gameUniverse.length < MIN_COUNTRIES_PER_GAME) throw new InsufficientGameDataAmountException();
+  if (gameUniverse.length < MIN_COUNTRIES_PER_GAME)
+    throw new InsufficientGameDataAmountException({ errorScopedTranslator: errorT });
   const countryNamedGameUniverse = await insertCountryNames(gameUniverse);
   const gameUniverseWithValues = insertValuesIfAlphabetical(kind, countryNamedGameUniverse);
   const sortedGameUniverse = await sortGameUniverse(gameUniverseWithValues);
