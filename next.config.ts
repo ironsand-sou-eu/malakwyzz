@@ -10,13 +10,13 @@ const nextConfig: NextConfig = {
     return [
       {
         destination: "/countries/:path*",
-        has: [
-          {
-            type: "host",
-            value: "countries.malakwyzz.com",
-          },
-        ],
+        has: [{ type: "host", value: "countries.malakwyzz.com" }],
         source: "/:path*",
+      },
+      {
+        destination: "/countries",
+        has: [{ type: "host", value: "countries.malakwyzz.com" }],
+        source: "/",
       },
     ];
   },
