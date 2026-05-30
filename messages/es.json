@@ -259,6 +259,14 @@
       "violence": "violencia"
     }
   },
+  "error": {
+    "bad-request": "Petición incorrecta",
+    "game-not-found": "La petición debe tener una cabecera content-type \"application/json\"",
+    "insufficient-game-data-amount": "Estos parámetros resultarían en un juego con muy poquitas entradas",
+    "unavailable-game-kind": "Tipo de juego no permitido",
+    "unsuported-type": "Intento no encontrado en este juego, prueba algo distinto",
+    "value-not-found-in-game": "Juego no encontrado, refresca la página y prueba otra vez."
+  },
   "geo-geeks-gather": "Geofrikis del mundo, reuníos¡¡!! 😎🌍",
   "guess-already-made": "Espabila 🤦 ya hiciste esa guess",
   "guess-me": "Adivíname 👀",
