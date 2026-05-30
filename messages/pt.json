@@ -259,6 +259,14 @@
       "violence": "violência"
     }
   },
+  "error": {
+    "bad-request": "Request inválido",
+    "game-not-found": "A request deve ter un header content-type \"application/json\"",
+    "insufficient-game-data-amount": "Esses parâmetros resultariam em un jogo muito pequeno",
+    "unavailable-game-kind": "Tipo de jogo não permitido",
+    "unsuported-type": "O chute enviado não faz parte desse jogo, tente enviar outra coisa",
+    "value-not-found-in-game": "Jogo não encontrado, recarregue a página e tente outra vez."
+  },
   "geo-geeks-gather": "Geonerds do mundo todo, uni-vos!! 😎🌍",
   "guess-already-made": "Acorda, doido 😭 tu já chutou esse aí",
   "guess-me": "Me adivinha 👀",

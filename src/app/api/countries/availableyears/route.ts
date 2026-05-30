@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import z from "zod";
 import { db } from "@/db/db";
 import { MlkApiResponse } from "@/shared/classes/mlk-api-response";
@@ -45,6 +46,7 @@ interface CalcAvailableYearsInDbParams {
   kind: string | null;
 }
 export async function calcAvailableYearsInDb({ kind }: CalcAvailableYearsInDbParams) {
-  if (!isAllowedGameKind(kind)) throw new UnavailableGameKindException();
+  const errorT = await getTranslations("error");
+  if (!isAllowedGameKind(kind)) throw new UnavailableGameKindException({ errorScopedTranslator: errorT });
   return await db.getViableYearsForKind(kind);
 }
