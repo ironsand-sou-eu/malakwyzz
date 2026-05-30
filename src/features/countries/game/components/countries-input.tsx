@@ -1,13 +1,14 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/shared/components/micro/button";
 import { TextInput } from "@/shared/components/micro/text-input";
 import useNotification from "@/shared/hooks/use-notification";
 import { useCountriesGuesses } from "./countries-game-provider";
 import "./countries-input.css";
+import { createComparisonCollator } from "@/i18n/helpers";
 import NewGameBlock from "./new-game-block";
 
 type CountriesInputProps = {
@@ -17,6 +18,7 @@ type CountriesInputProps = {
 export default function CountriesInput({ gameId }: CountriesInputProps) {
   const notify = useNotification();
   const { guesses, isGameLost, isGameWon, addGuess } = useCountriesGuesses();
+  const locale = useLocale();
   const t = useTranslations("");
 
   const [currentGuess, setCurrentGuess] = useState("");
@@ -57,15 +59,17 @@ export default function CountriesInput({ gameId }: CountriesInputProps) {
     },
   });
 
-  function handleSubmit(ev?: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(ev?: FormEvent<HTMLFormElement>) {
     ev?.preventDefault();
-    if (!isInputValid()) return;
+    const valid = await isInputValid();
+    if (!valid) return;
     makeGuessMutation.mutate();
   }
 
-  function isInputValid() {
+  async function isInputValid() {
     if (!currentGuess.trim()) return false;
-    if (guesses.some((g) => g.guess.toLowerCase().trim() === currentGuess.toLowerCase().trim())) {
+    const collator = await createComparisonCollator(locale);
+    if (guesses.some((g) => collator.compare(g.guess.toLowerCase().trim(), currentGuess.toLowerCase().trim()) === 0)) {
       notify.warning(t("guess-already-made"));
       return false;
     }
