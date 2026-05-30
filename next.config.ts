@@ -7,18 +7,20 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   reactStrictMode: true,
   async rewrites() {
-    return [
-      {
-        destination: "/countries/:path*",
-        has: [{ type: "host", value: "countries.malakwyzz.com" }],
-        source: "/:path*",
-      },
-      {
-        destination: "/countries",
-        has: [{ type: "host", value: "countries.malakwyzz.com" }],
-        source: "/",
-      },
-    ];
+    return {
+      beforeFiles: [
+        {
+          destination: "/countries/:path*",
+          has: [{ type: "host", value: "countries.malakwyzz.com" }],
+          source: "/:path*",
+        },
+        {
+          destination: "/countries",
+          has: [{ type: "host", value: "countries.malakwyzz.com" }],
+          source: "/",
+        },
+      ],
+    };
   },
   turbopack: { root: path.join(__dirname, "..") },
 };
